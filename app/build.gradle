@@ -1,0 +1,142 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+    id 'com.google.protobuf'
+    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
+}
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initializes a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+
+// Loads the keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+android {
+    namespace 'com.jgt.wizelinebaz2023'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.jgt.wizelinebaz2023"
+        minSdk 29
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        config {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            //movie_db_api_key keystoreProperties['MOVIEDB_API_KEY']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.0"
+    }
+}
+
+dependencies {
+    def composeBom = platform('androidx.compose:compose-bom:2023.01.00')
+    implementation composeBom
+    androidTestImplementation composeBom
+
+    // CORE
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.collection:collection-ktx:1.2.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    implementation 'androidx.navigation:navigation-runtime:2.5.3'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.activity:activity-ktx:1.7.0-alpha04'
+
+    // ROOM
+    implementation "androidx.room:room-runtime:2.5.0"
+    annotationProcessor "androidx.room:room-compiler:2.5.0"
+
+    implementation 'androidx.room:room-ktx:2.5.0'
+    implementation 'androidx.room:room-runtime:2.5.0'
+    kapt 'androidx.room:room-compiler:2.5.0'
+
+    // DATASTORE: Reemplazo de SharedPreferences
+    implementation 'androidx.datastore:datastore-core:1.0.0'
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
+
+    // PROTOBUF: Parser de archivos .proto a clases Java, necesario para Datastore
+    implementation 'com.google.protobuf:protobuf-javalite:3.18.0'
+
+    // GSON: Converter HTTP y parser de Json
+    implementation 'com.google.code.gson:gson:2.10'
+
+    // COMPOSE CON MATERIAL DESIGN
+    implementation 'androidx.compose.material3:material3:1.0.1'
+    implementation 'androidx.compose.material:material-icons-core:1.3.1'
+    implementation 'androidx.compose.material:material-icons-extended:1.3.1'
+    implementation 'androidx.compose.material3:material3-window-size-class:1.0.1'
+
+    // COMPOSE CON NAVEGACION
+    implementation 'androidx.navigation:navigation-compose:2.5.3'
+
+    // COMPOSE EN VIEWMODEL
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
+
+    // UTILIDADES PARA VIEWMODELS
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+
+    // TESTING
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // FIREBASE
+    implementation platform('com.google.firebase:firebase-bom:31.4.0')
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.2'
+    implementation 'com.google.firebase:firebase-config'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-common-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
+    // SERVICIOS DE GOOGLE
+    implementation 'com.google.gms:google-services:4.3.15'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.1'
+
+    // RETROFIT
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // OKHTTP
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+    testImplementation('com.squareup.okhttp3:mockwebserver:4.10.0')
+
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
+}
