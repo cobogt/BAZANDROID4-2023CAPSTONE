@@ -21,6 +21,11 @@ class AuthenticationViewModel( application: Application ): AndroidViewModel( app
     private val _loginComponentStateMutable = MutableStateFlow(LoginState.LoginData())
     val loginComponentState: StateFlow<LoginState> = _loginComponentStateMutable.asStateFlow()
 
+    init {
+        // Cargamos el estaado inicial de la vista
+        dispatch( Action.LoadStateAction )
+    }
+
     override fun dispatch(action: Action): Action {
         var currentAction = AppStateStore.dispatch( action )
 

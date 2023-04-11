@@ -17,17 +17,17 @@ object AppStateStore: Store {
         FirebaseAuthMiddleware
     )
 
-    private val _userState = MutableStateFlow<UserState>( UserState.Loading )
-    val userState: StateFlow<UserState> = _userState
+    private val userStateMutable = MutableStateFlow<UserState>( UserState.Loading )
+    val userState: StateFlow<UserState> = userStateMutable
 
-    override fun dispatch(action: Action): Action {
+    override fun dispatch( action: Action ): Action {
         var currentAction = action
 
         middlewareList.forEach {
             currentAction = it.next( currentAction )
         }
 
-        _userState.value = _userState.value.reduce( currentAction )
+        userStateMutable.value = userStateMutable.value.reduce( currentAction )
 
         return currentAction
     }

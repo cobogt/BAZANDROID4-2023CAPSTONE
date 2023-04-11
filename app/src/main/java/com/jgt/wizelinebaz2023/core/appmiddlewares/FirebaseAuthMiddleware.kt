@@ -108,7 +108,7 @@ object FirebaseAuthMiddleware: Middleware {
                 if( task.isSuccessful )
                     trySend( UserActions.ResultUserActions.VerificationEmailSentAction )
                 else
-                    trySend( Action.ErrorAction("VerificationMailSend failed.", task.exception ) )
+                    trySend( Action.ErrorAction("SendVerificationMail failed.", task.exception ))
             }
 
         // [END send_email_verification]

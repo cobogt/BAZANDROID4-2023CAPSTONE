@@ -6,7 +6,7 @@ package com.jgt.wizelinebaz2023.core.mvi
  * * * * * * * * * * **/
 abstract class State {
     open val productionRules = listOf<ProductionRule>()
-    open val caretaker: Caretaker<State>? = null
+    open val caretaker: Caretaker? = null
 
     inline fun <reified T: State>reduce( action: Action ): T =
         productionRules.map {
