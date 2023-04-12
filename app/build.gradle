@@ -39,7 +39,13 @@ android {
         }
     }
 
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
+
     buildTypes {
+        debug {
+            buildConfigField("String", "API_KEY", "\"" + localProperties['MOVIEDB_API_KEY'] + "\"")
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
