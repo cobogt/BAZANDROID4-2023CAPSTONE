@@ -6,7 +6,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.jgt.wizelinebaz2023.core.mvi.Action
 import com.jgt.wizelinebaz2023.core.sharedActions.UserActions
-import com.jgt.wizelinebaz2023.core.sharedMiddlewares.FirebaseAuthMiddleware
 import com.jgt.wizelinebaz2023.core.sharedModels.User
 import kotlinx.coroutines.flow.callbackFlow
 

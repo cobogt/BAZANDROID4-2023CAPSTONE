@@ -13,7 +13,7 @@ data class MovieDetailResponse(
                                             val genres:               List<Genre> = listOf(),
                                             val homepage:             String? = null,
                                             val overview:             String? = null,
-                                            val popularity:           Number,
+                                            val popularity:           Int,
                                             val revenue:              Int,
                                             val runtime:              Int? = null,
                                             val status:               String,

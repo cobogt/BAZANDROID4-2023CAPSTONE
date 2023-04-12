@@ -14,9 +14,9 @@ data class MovieImagesResponse(
     data class Image(
         val height:       Int,
         val width:        Int,
-        @SerializedName("aspect_ratio") val aspectRatio: Number,
+        @SerializedName("aspect_ratio") val aspectRatio: Int,
         @SerializedName("file_path")    val filePath:    String,
-        @SerializedName("iso_639_1")    val iso639i:    String? = null,
+        @SerializedName("iso_639_1")    val iso639i:     String? = null,
         @SerializedName("vote_average") val voteAverage: Int,
         @SerializedName("vote_count")   val voteCount:   Int,
     )
