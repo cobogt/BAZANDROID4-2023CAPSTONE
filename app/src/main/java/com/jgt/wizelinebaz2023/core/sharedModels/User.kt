@@ -1,4 +1,4 @@
-package com.jgt.wizelinebaz2023.core.appmodels
+package com.jgt.wizelinebaz2023.core.sharedModels
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT

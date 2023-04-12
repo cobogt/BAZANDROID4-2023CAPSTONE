@@ -1,4 +1,4 @@
-package com.jgt.wizelinebaz2023.core.appactions
+package com.jgt.wizelinebaz2023.core.sharedActions
 
 import com.jgt.wizelinebaz2023.core.mvi.Action
 

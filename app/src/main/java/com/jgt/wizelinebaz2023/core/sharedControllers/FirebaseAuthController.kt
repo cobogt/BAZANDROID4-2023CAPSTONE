@@ -1,55 +1,31 @@
-package com.jgt.wizelinebaz2023.core.appmiddlewares
+package com.jgt.wizelinebaz2023.core.sharedControllers
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.jgt.wizelinebaz2023.core.appactions.UserActions
-import com.jgt.wizelinebaz2023.core.appmodels.User
 import com.jgt.wizelinebaz2023.core.mvi.Action
-import com.jgt.wizelinebaz2023.core.mvi.Middleware
+import com.jgt.wizelinebaz2023.core.sharedActions.UserActions
+import com.jgt.wizelinebaz2023.core.sharedMiddlewares.FirebaseAuthMiddleware
+import com.jgt.wizelinebaz2023.core.sharedModels.User
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
- * Created by Jacobo G Tamayo on 10/04/23.
+ * Created by Jacobo G Tamayo on 12/04/23.
  * * * * * * * * * * **/
-object FirebaseAuthMiddleware: Middleware {
-    private var auth: FirebaseAuth = Firebase.auth
-
+object FirebaseAuthController {
     private val TAG = javaClass.simpleName
+    private var auth: FirebaseAuth = Firebase.auth
 
     init {
         val currentUser = auth.currentUser
-        if(currentUser != null){
+
+        if(currentUser != null)
             reload()
-        }
     }
 
-    override fun next( action: Action ): Action {
-        if( action is UserActions ) {
-            return runBlocking {
-                when( action ) {
-                    is UserActions.CreateAccountAction ->
-                        createAccount( action.email, action.password ).first()
-
-                    is UserActions.SignInAction -> TODO()
-                    UserActions.LogoutAction -> {
-                        auth.signOut()
-                        UserActions.ResultUserActions.LoggedOutAction
-                    }
-                    UserActions.SendEmailVerificationAction -> TODO()
-                    else -> action
-                }
-            }
-        }
-
-        return action
-    }
-
-    private fun createAccount(email: String, password: String) = callbackFlow<Action> {
+    fun createAccount(email: String, password: String) = callbackFlow<Action> {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener({ p0 -> p0?.run() }) { task ->
                 if (task.isSuccessful) {
@@ -62,17 +38,19 @@ object FirebaseAuthMiddleware: Middleware {
                             email   = "${it.email}",
                         )
                     }?.also {
-                        trySend( UserActions.ResultUserActions.AccountCreatedAction( it ) )
+                        trySend(
+                            UserActions.ResultUserActions.AccountCreatedAction( it ) )
                     }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    trySend( Action.ErrorAction("Authentication failed.", task.exception) )
+                    trySend(
+                        Action.ErrorAction("Authentication failed.", task.exception) )
                 }
             }
     }
 
-    private fun signIn(email: String, password: String) = callbackFlow<Action>{
+    fun signIn(email: String, password: String) = callbackFlow<Action>{
         // [START sign_in_with_email]
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener({ p0 -> p0?.run() }) { task ->
@@ -86,18 +64,20 @@ object FirebaseAuthMiddleware: Middleware {
                             email   = "${it.email}",
                         )
                     }?.also {
-                        trySend( UserActions.ResultUserActions.SignedInAction( it ) )
+                        trySend(
+                            UserActions.ResultUserActions.SignedInAction( it ) )
                     }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    trySend( Action.ErrorAction("Authentication failed.", task.exception) )
+                    trySend(
+                        Action.ErrorAction("Authentication failed.", task.exception) )
                 }
             }
         // [END sign_in_with_email]
     }
 
-    private fun sendEmailVerification() = callbackFlow<Action>{
+    fun sendEmailVerification() = callbackFlow<Action>{
         // [START send_email_verification]
         val user = auth.currentUser!!
         user.sendEmailVerification()
@@ -106,12 +86,18 @@ object FirebaseAuthMiddleware: Middleware {
             }
             .addOnCompleteListener({ p0 -> p0?.run() }) { task ->
                 if( task.isSuccessful )
-                    trySend( UserActions.ResultUserActions.VerificationEmailSentAction )
+                    trySend(
+                        UserActions.ResultUserActions.VerificationEmailSentAction )
                 else
-                    trySend( Action.ErrorAction("SendVerificationMail failed.", task.exception ))
+                    trySend(
+                        Action.ErrorAction("SendVerificationMail failed.", task.exception ))
             }
 
         // [END send_email_verification]
+    }
+
+    fun signOut() {
+        auth.signOut()
     }
 
     private fun reload() {
