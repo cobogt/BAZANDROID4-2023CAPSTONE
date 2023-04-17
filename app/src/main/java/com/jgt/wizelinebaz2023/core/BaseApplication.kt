@@ -2,6 +2,7 @@ package com.jgt.wizelinebaz2023.core
 
 import android.app.Application
 import android.content.Context
+import com.jgt.wizelinebaz2023.core.sharedControllers.NavigationController
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -9,12 +10,14 @@ import android.content.Context
  * * * * * * * * * * **/
 class BaseApplication: Application() {
     companion object {
-        lateinit var AppContext: Context
+        lateinit var appContext: Context
     }
 
     override fun onCreate() {
         super.onCreate()
 
-        AppContext = applicationContext
+        appContext = applicationContext
+
+        registerActivityLifecycleCallbacks( NavigationController )
     }
 }

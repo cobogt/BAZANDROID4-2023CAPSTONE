@@ -5,6 +5,7 @@ import com.jgt.wizelinebaz2023.core.sharedStates.UserState
 import com.jgt.wizelinebaz2023.core.mvi.Action
 import com.jgt.wizelinebaz2023.core.mvi.Middleware
 import com.jgt.wizelinebaz2023.core.mvi.Store
+import com.jgt.wizelinebaz2023.core.sharedMiddlewares.NavigationMiddleware
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -14,11 +15,16 @@ import kotlinx.coroutines.flow.StateFlow
  * * * * * * * * * * **/
 object AppStateStore: Store {
     override val middlewareList: List<Middleware> = listOf(
-        FirebaseAuthMiddleware
+        FirebaseAuthMiddleware,
+        NavigationMiddleware,
     )
 
     private val userStateMutable = MutableStateFlow<UserState>( UserState.Loading )
     val userState: StateFlow<UserState> = userStateMutable
+
+    private val currentPathComposeM =
+        MutableStateFlow<Pair<String, Map<String, String>>>( Pair("/", mapOf()) )
+    val currentPathCompose: StateFlow<Pair<String, Map<String, String>>> = currentPathComposeM
 
     override fun dispatch( action: Action ): Action {
         var currentAction = action

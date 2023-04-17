@@ -51,7 +51,7 @@ abstract class MoviesDatabase: RoomDatabase() {
         fun getDatabase(): MoviesDatabase {
             moviesDatabase = moviesDatabase ?: synchronized( this ) {
                 Room.databaseBuilder(
-                    context = BaseApplication.AppContext,
+                    context = BaseApplication.appContext,
                     MoviesDatabase::class.java,
                     name = "movies_db"
                 ).build()

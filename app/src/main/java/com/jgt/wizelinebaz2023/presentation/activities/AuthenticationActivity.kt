@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
 import com.jgt.wizelinebaz2023.domain.AuthenticationViewModel
 import com.jgt.wizelinebaz2023.presentation.components.authentication.LoginComponent
 import com.jgt.wizelinebaz2023.presentation.components.authentication.SignUpComponent
@@ -17,8 +18,8 @@ import com.jgt.wizelinebaz2023.presentation.components.authentication.SignUpComp
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
-class AuthenticationActivity: ComponentActivity() {
-    private val viewModel by viewModels<AuthenticationViewModel>()
+class AuthenticationActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
+    override val viewModelStore by viewModels<AuthenticationViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
