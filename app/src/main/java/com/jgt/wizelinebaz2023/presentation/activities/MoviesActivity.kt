@@ -5,9 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -20,12 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.jgt.wizelinebaz2023.core.AppStateStore
 import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
+import com.jgt.wizelinebaz2023.core.mvi.navigationCatalog.NavigationCatalog
 import com.jgt.wizelinebaz2023.core.sharedActions.NavigationActions
+import com.jgt.wizelinebaz2023.core.sharedActions.UserActions
+import com.jgt.wizelinebaz2023.core.sharedStates.UserState
 import com.jgt.wizelinebaz2023.domain.MoviesViewModel
 import com.jgt.wizelinebaz2023.presentation.components.movies.MovieDetailComponent
 import com.jgt.wizelinebaz2023.presentation.components.movies.MovieListComponent
@@ -45,7 +49,30 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
 
+
+
             Column {
+                when( val currentUser = AppStateStore.userState.collectAsState().value ) {
+                    is UserState.LoggedIn ->
+                        Text(text = "User: ${currentUser.user.email}",
+                            modifier = Modifier.clickable {
+                            viewModelStateStore.dispatch(
+                                UserActions.LogoutAction
+                            )
+
+                            viewModelStateStore.dispatch(
+                                NavigationActions.NavigateToActivity(
+                                    NavigationCatalog.AuthActivityTarget().className
+                                )
+                            )
+
+                            finish()
+                        }, fontSize = 6.em)
+                    else -> {}
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
                 NavHost(navController = navController, startDestination = "/list/latest") {
                     composable("/list/latest")    { MovieListComponent("latest") }
                     composable("/list/top_rated") { MovieListComponent("top_rated") }

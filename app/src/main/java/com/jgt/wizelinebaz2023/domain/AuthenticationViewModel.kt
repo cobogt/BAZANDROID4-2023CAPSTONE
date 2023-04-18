@@ -19,13 +19,9 @@ class AuthenticationViewModel: Store, ViewModel() {
         FirebaseAuthMiddleware( this )
     )
 
-    private val currentActionMutable = MutableStateFlow<Action>(Action.LoadStateAction)
+    private val currentActionMutable = MutableStateFlow<Action>(Action.VoidAction)
     override val currenAction: StateFlow<Action> = currentActionMutable.asStateFlow()
 
-    init {
-        // Cargamos el estaado inicial de la vista
-        dispatch( Action.LoadStateAction )
-    }
 
     override fun dispatch(action: Action): Action {
         var currentAction = AppStateStore.dispatch( action )

@@ -20,14 +20,19 @@ import kotlinx.coroutines.runBlocking
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
 sealed class UserState: State() {
+    protected val sharedCaretaker: UserStateCaretaker = UserStateCaretaker()
+
     object Loading: UserState() {
+        override val caretaker: Caretaker = sharedCaretaker
         override val productionRules = sharedProductionRules }
     object LoggedOut: UserState() {
+        override val caretaker: Caretaker = sharedCaretaker
         override val productionRules = sharedProductionRules }
     data class LoggedIn( val user: User ): UserState() {
+        override val caretaker: Caretaker = sharedCaretaker
         override val productionRules = sharedProductionRules }
 
-    override val caretaker: Caretaker = UserStateCaretaker()
+    override val caretaker: Caretaker = sharedCaretaker
 
     protected val sharedProductionRules = listOf<ProductionRule> { state, action ->
         if( action is UserActions.ResultUserActions && state is UserState )
@@ -95,7 +100,7 @@ class UserStateCaretaker: Caretaker {
         return runBlocking {
             BaseApplication.appContext.userStore.data.firstOrNull()?.let {
                 Log.d("UserStateCaretaker", "LoadState $it")
-                if( it.stateClass == "UserState.LoggedIn::class.simpleName")
+                if( it.stateClass == "LoggedIn")
                     UserState.LoggedIn(
                         User(
                             it.id,

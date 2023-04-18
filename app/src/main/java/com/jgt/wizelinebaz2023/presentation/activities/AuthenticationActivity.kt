@@ -14,11 +14,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.jgt.wizelinebaz2023.core.AppStateStore
+import com.jgt.wizelinebaz2023.core.mvi.Action
 import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
+import com.jgt.wizelinebaz2023.core.mvi.navigationCatalog.NavigationCatalog
 import com.jgt.wizelinebaz2023.core.sharedActions.NavigationActions
+import com.jgt.wizelinebaz2023.core.sharedStates.UserState
 import com.jgt.wizelinebaz2023.domain.AuthenticationViewModel
 import com.jgt.wizelinebaz2023.presentation.components.authentication.LoginComponent
 import com.jgt.wizelinebaz2023.presentation.components.authentication.SignUpComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** * * * * * * * * *
@@ -49,6 +57,26 @@ class AuthenticationActivity:
                         if( it is NavigationActions.NavigateToCompose )
                             navController.navigate( it.composePath )
                     }
+                }
+            }
+        }
+
+        // Cargamos el estaado inicial de la vista
+        viewModelStateStore
+            .dispatch( Action.LoadStateAction )
+
+        CoroutineScope( Dispatchers.IO ).launch {
+            AppStateStore.userState.first().also {
+                Log.e("AuthenticationActivity", "$it")
+
+                if( it is UserState.LoggedIn ) {
+                    viewModelStateStore.dispatch(
+                        NavigationActions.NavigateToActivity(
+                            NavigationCatalog.MoviesActivityTarget().className
+                        )
+                    )
+
+                    finish()
                 }
             }
         }
