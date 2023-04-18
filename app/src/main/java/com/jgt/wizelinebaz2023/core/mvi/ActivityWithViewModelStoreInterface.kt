@@ -5,5 +5,5 @@ package com.jgt.wizelinebaz2023.core.mvi
  * Created by Jacobo G Tamayo on 13/04/23.
  * * * * * * * * * * **/
 interface ActivityWithViewModelStoreInterface {
-    val viewModelStore: Store
+    val viewModelStateStore: Store
 }

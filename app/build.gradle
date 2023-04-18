@@ -103,6 +103,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10'
 
     // COMPOSE CON MATERIAL DESIGN
+    implementation 'androidx.compose.material:material:1.4.1'
     implementation 'androidx.compose.material3:material3:1.0.1'
     implementation 'androidx.compose.material:material-icons-core:1.3.1'
     implementation 'androidx.compose.material:material-icons-extended:1.3.1'
@@ -113,6 +114,10 @@ dependencies {
 
     // COMPOSE EN VIEWMODEL
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
+
+    // COMPOSE PREVIEW
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
 
     // UTILIDADES PARA VIEWMODELS
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'

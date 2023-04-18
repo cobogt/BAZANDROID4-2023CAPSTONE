@@ -2,6 +2,7 @@ package com.jgt.wizelinebaz2023.domain
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.jgt.wizelinebaz2023.core.AppStateStore
 import com.jgt.wizelinebaz2023.core.mvi.Action
 import com.jgt.wizelinebaz2023.core.mvi.Middleware
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
-class AuthenticationViewModel( application: Application ): AndroidViewModel( application ), Store {
+class AuthenticationViewModel: Store, ViewModel() {
     override val middlewareList: List<Middleware> = listOf()
 
     private val _loginComponentStateMutable = MutableStateFlow(LoginState.LoginData())

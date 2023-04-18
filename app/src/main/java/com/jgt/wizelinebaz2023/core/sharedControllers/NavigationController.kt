@@ -6,6 +6,8 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import com.jgt.wizelinebaz2023.core.BaseApplication
+import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
+import com.jgt.wizelinebaz2023.core.sharedActions.NavigationActions
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -20,15 +22,14 @@ object NavigationController: Application.ActivityLifecycleCallbacks {
         className: String,
         params: Map<String, String> = mapOf()
     ) {
-        if( currentActivity == null )
-            launchActivity( className, params )
-        else
-            if( currentActivity!!.javaClass.canonicalName == className ) {
-
-            }else{
-
+        if( currentActivity != null && currentActivity!!.javaClass.canonicalName == className )
+            currentActivity?.intent = Intent().apply {
+                params.forEach {
+                    putExtra( it.key, it.value )
+                }
             }
-
+        else
+            launchActivity( className, params )
     }
 
     private fun launchActivity(
@@ -37,16 +38,26 @@ object NavigationController: Application.ActivityLifecycleCallbacks {
     ) {
         BaseApplication.appContext.startActivity(
             Intent().apply {
-                setClassName(
-                    BaseApplication.appContext,
-                    className
-                )
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP + Intent.FLAG_ACTIVITY_NEW_DOCUMENT
+
+                params.forEach {
+                    putExtra( it.key, it.value )
+                }
+
+                setClassName( BaseApplication.appContext, className )
             }
         )
     }
 
     fun navigateToCompose( composePath: String ) {
-
+        currentActivity
+            ?.takeIf { it is ActivityWithViewModelStoreInterface }
+            ?.let { it as ActivityWithViewModelStoreInterface }
+            ?.also {
+                it.viewModelStateStore.dispatch(
+                    NavigationActions.NavigateToCompose( composePath )
+                )
+            }
     }
 
     override fun onActivityCreated(p0: Activity, p1: Bundle?) {
