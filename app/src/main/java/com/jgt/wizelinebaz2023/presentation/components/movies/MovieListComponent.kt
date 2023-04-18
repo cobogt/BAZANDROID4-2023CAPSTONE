@@ -8,6 +8,6 @@ import androidx.compose.runtime.Composable
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
 @Composable
-fun MovieListComponent() {
-    Text(text = "MovieListComponent")
+fun MovieListComponent( category: String ) {
+    Text(text = "MovieListComponent: $category")
 }

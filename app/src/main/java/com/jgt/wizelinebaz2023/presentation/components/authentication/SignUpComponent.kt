@@ -95,7 +95,8 @@ fun SignUpComponent() {
     ) {
         val modifier = Modifier.fillMaxWidth()
 
-        Text(stringResource(id = R.string.signup_component_label_header), modifier.padding(vertical = 10.dp), fontSize = 8.em)
+        Text(stringResource(id = R.string.signup_component_label_header),
+            modifier.padding(vertical = 10.dp), fontSize = 8.em)
         Spacer(modifier = Modifier.height(20.dp))
         TextField(value = email, onValueChange = {
             viewModel.dispatch(
