@@ -14,16 +14,13 @@ object NavigationMiddleware: Middleware {
         if( action is NavigationActions ) {
             val controller = NavigationController
 
-            when( action ) {
-                is NavigationActions.NavigateToActivity ->
-                    controller.navigateToActivity(
-                        action.activityClassName,
-                        mapOf( "path" to (action.composePath ?: "/") )
-                    )
+            if (action is NavigationActions.NavigateToActivity)
+                controller.navigateToActivity(
+                    action.activityClassName,
+                    mapOf( "path" to (action.composePath ?: "/") )
+                )
 
-                is NavigationActions.NavigateToCompose ->
-                    controller.navigateToCompose( action.composePath )
-            }
+                // is NavigationActions.NavigateToCompose -> controller.navigateToCompose( action.composePath )
         }
 
         return action

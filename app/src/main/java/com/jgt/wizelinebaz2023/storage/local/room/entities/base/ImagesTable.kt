@@ -3,7 +3,6 @@ package com.jgt.wizelinebaz2023.storage.local.room.entities.base
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT

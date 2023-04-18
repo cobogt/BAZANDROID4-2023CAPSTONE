@@ -46,7 +46,10 @@ sealed class LoginState: State() {
                                 validateEmailAndPassword(action.newEmail, state.loginData.password)
 
                             if ( emailAndPasswordValidated.first )
-                                state.loginData.copy(email = action.newEmail)
+                                LoginData(
+                                    action.newEmail,
+                                    state.loginData.password
+                                )
                             else
                                 LoginError(
                                     state.loginData.copy(email = action.newEmail),
@@ -58,7 +61,10 @@ sealed class LoginState: State() {
                                 validateEmailAndPassword(state.loginData.email, action.newPassword)
 
                             if ( emailAndPasswordValidated.first )
-                                state.loginData.copy(password = action.newPassword)
+                                LoginData(
+                                    state.loginData.email,
+                                    password = action.newPassword
+                                )
                             else
                                 LoginError(
                                     state.loginData.copy(password = action.newPassword),
@@ -76,21 +82,26 @@ sealed class LoginState: State() {
 
         return Pair(
             emailValidated.first && passwordValidated.first,
-            "${emailValidated.second} ${passwordValidated.second}".trim()
+            listOf(emailValidated.second, passwordValidated.second)
+                .filterNot { it.isEmpty() }
+                .joinToString(", ")
         )
     }
 
     private fun validateEmail(email: String ): Pair<Boolean, String> {
-        if (email.isNotEmpty())
-            return false to "El email no debe estar vacío"
+        if (email.isEmpty())
+            return false to "El email no debe estar vacío."
 
-        return true to "Email válido"
+        if ( ! email.contains(Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$")) )
+            return false to "El email no tiene un formato correcto."
+
+        return true to ""
     }
 
     private fun validatePassword( password: String ): Pair<Boolean, String> {
-        if( password.length > 5 )
-            return false to "La longitud mínima es de 5 caracteres"
+        if( password.length < 5 )
+            return false to "La longitud mínima de la contraseña es de 5 caracteres"
 
-        return true to "Password válido"
+        return true to ""
     }
 }

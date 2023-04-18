@@ -1,13 +1,10 @@
 package com.jgt.wizelinebaz2023.domain
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import com.jgt.wizelinebaz2023.core.AppStateStore
 import com.jgt.wizelinebaz2023.core.mvi.Action
 import com.jgt.wizelinebaz2023.core.mvi.Middleware
 import com.jgt.wizelinebaz2023.core.mvi.Store
-import com.jgt.wizelinebaz2023.presentation.states.LoginState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,8 +16,8 @@ import kotlinx.coroutines.flow.asStateFlow
 class AuthenticationViewModel: Store, ViewModel() {
     override val middlewareList: List<Middleware> = listOf()
 
-    private val _loginComponentStateMutable = MutableStateFlow(LoginState.LoginData())
-    val loginComponentState: StateFlow<LoginState> = _loginComponentStateMutable.asStateFlow()
+    private val currentActionMutable = MutableStateFlow<Action>(Action.LoadStateAction)
+    override val currenAction: StateFlow<Action> = currentActionMutable.asStateFlow()
 
     init {
         // Cargamos el estaado inicial de la vista
@@ -32,7 +29,7 @@ class AuthenticationViewModel: Store, ViewModel() {
 
         middlewareList.forEach { currentAction = it.next( currentAction ) }
 
-        _loginComponentStateMutable.value = _loginComponentStateMutable.value.reduce( currentAction )
+        currentActionMutable.value = currentAction
 
         return currentAction
     }

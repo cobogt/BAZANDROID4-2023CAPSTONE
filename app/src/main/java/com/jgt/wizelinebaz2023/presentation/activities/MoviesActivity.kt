@@ -23,11 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelStore
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
 import com.jgt.wizelinebaz2023.core.sharedActions.NavigationActions
 import com.jgt.wizelinebaz2023.domain.MoviesViewModel

@@ -1,29 +1,30 @@
 package com.jgt.wizelinebaz2023.presentation.components.authentication
 
+import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.jgt.wizelinebaz2023.domain.AuthenticationViewModel
-import com.jgt.wizelinebaz2023.presentation.states.LoginState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import com.jgt.wizelinebaz2023.R
+import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
 import com.jgt.wizelinebaz2023.core.sharedActions.NavigationActions
 import com.jgt.wizelinebaz2023.core.sharedActions.UserActions
+import com.jgt.wizelinebaz2023.domain.AuthenticationViewModel
 import com.jgt.wizelinebaz2023.presentation.actions.LoginComponentActions
-import kotlinx.coroutines.flow.asStateFlow
+import com.jgt.wizelinebaz2023.presentation.states.LoginState
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -31,22 +32,39 @@ import kotlinx.coroutines.flow.asStateFlow
  * * * * * * * * * * **/
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginComponent( loginState: StateFlow<LoginState> ) {
+fun LoginComponent() {
     // Enlace desde estado del Store y hacia Dispatcher
-    val viewModel: AuthenticationViewModel = viewModel()
-    val localLoginState = loginState.collectAsState()
+    val currentActivity = LocalContext.current as Activity
+    val viewModel: AuthenticationViewModel = (currentActivity as ActivityWithViewModelStoreInterface)
+        .viewModelStateStore as AuthenticationViewModel
+
+    var loginComponentState by remember {
+        mutableStateOf<LoginState>( LoginState.LoginData() )
+    }
+
+    LaunchedEffect( Unit ) {
+        viewModel.currenAction.collect {
+            loginComponentState = loginComponentState.reduce( it )
+            Log.d("LoginComponent", "LoginState: $loginComponentState")
+        }
+    }
 
     // Variables locales
-    var email        = ""
-    var password     = ""
-    var hasError    = false
-    var errorMessage = ""
+    var email        by rememberSaveable { mutableStateOf("") }
+    var password     by rememberSaveable { mutableStateOf("") }
+    var hasError     by rememberSaveable { mutableStateOf(false) }
+    var errorMessage by rememberSaveable { mutableStateOf("") }
 
     // Aplanado de estados
-    when ( val currentState = localLoginState.value ) {
+
+    val currentState = loginComponentState
+
+    when ( currentState ) {
         is LoginState.LoginData -> {
-            email    = currentState.email
-            password = currentState.password
+            email        = currentState.email
+            password     = currentState.password
+            hasError     = false
+            errorMessage = ""
         }
         is LoginState.LoginError -> {
             hasError    = true
@@ -84,7 +102,7 @@ fun LoginComponent( loginState: StateFlow<LoginState> ) {
                 viewModel.dispatch(
                     UserActions.SignInAction( email, password )
                 )
-            }, enabled = ! hasError ) {
+            }, enabled = ! hasError && email.isNotEmpty() && password.isNotEmpty() ) {
                 Text(stringResource(id = R.string.login_component_button_login))
             }
         }
@@ -114,24 +132,20 @@ fun LoginComponent( loginState: StateFlow<LoginState> ) {
 @Composable
 @Preview( showBackground = true )
 fun LoginComponentPreview() {
-    val loginData = LoginState.LoginData("Email de prueba", "Password123")
-    val loginState = MutableStateFlow<LoginState>(
-        loginData
-    ).asStateFlow()
+    val viewModel: AuthenticationViewModel = viewModel()
 
-    LoginComponent( loginState )
+    viewModel.dispatch( LoginComponentActions.SetEmailAction("Email de prueba"))
+    viewModel.dispatch( LoginComponentActions.SetPasswordAction(""))
+
+    LoginComponent()
 }
 
 @Composable
 @Preview( showBackground = true )
 fun LoginComponentErrorPreview() {
-    val loginData = LoginState.LoginData("Email de prueba", "Password123")
-    val loginState = MutableStateFlow<LoginState>(
-        // loginData
-        LoginState.LoginError(
-            loginData, "No se puede iniciar sesión"
-        )
-    ).asStateFlow()
+    val viewModel: AuthenticationViewModel = viewModel()
 
-    LoginComponent( loginState )
+    viewModel.dispatch( LoginComponentActions.SetEmailAction("Email"))
+
+    LoginComponent()
 }

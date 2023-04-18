@@ -8,6 +8,7 @@ import com.jgt.wizelinebaz2023.core.mvi.Store
 import com.jgt.wizelinebaz2023.core.sharedMiddlewares.NavigationMiddleware
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -19,12 +20,11 @@ object AppStateStore: Store {
         NavigationMiddleware,
     )
 
+    private val currentActionMutable = MutableStateFlow<Action>(Action.LoadStateAction)
+    override val currenAction: StateFlow<Action> = currentActionMutable.asStateFlow()
+
     private val userStateMutable = MutableStateFlow<UserState>( UserState.Loading )
     val userState: StateFlow<UserState> = userStateMutable
-
-    private val currentPathComposeM =
-        MutableStateFlow<Pair<String, Map<String, String>>>( Pair("/", mapOf()) )
-    val currentPathCompose: StateFlow<Pair<String, Map<String, String>>> = currentPathComposeM
 
     override fun dispatch( action: Action ): Action {
         var currentAction = action
