@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.em
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jgt.wizelinebaz2023.R
 import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
+import com.jgt.wizelinebaz2023.core.mvi.navigationCatalog.NavigationCatalog
 import com.jgt.wizelinebaz2023.core.sharedActions.NavigationActions
 import com.jgt.wizelinebaz2023.core.sharedActions.UserActions
 import com.jgt.wizelinebaz2023.domain.AuthenticationViewModel
@@ -45,7 +46,17 @@ fun LoginComponent() {
     LaunchedEffect( Unit ) {
         viewModel.currenAction.collect {
             loginComponentState = loginComponentState.reduce( it )
-            Log.d("LoginComponent", "LoginState: $loginComponentState")
+
+            if( it is UserActions.ResultUserActions.LoggedInAction ) {
+                viewModel.dispatch(
+                    NavigationActions.NavigateToActivity(
+                        NavigationCatalog.MoviesActivityTarget().className
+                    )
+                )
+
+                currentActivity.finish()
+            }
+            Log.e("LoginComponent", "Action $it")
         }
     }
 
@@ -84,23 +95,29 @@ fun LoginComponent() {
         val modifier = Modifier.fillMaxWidth()
 
         Text(stringResource(id = R.string.login_component_label_header), modifier.padding(vertical = 10.dp), fontSize = 8.em)
+        Spacer(modifier = Modifier.height(20.dp))
 
         TextField(value = email, onValueChange = {
             viewModel.dispatch(
                 LoginComponentActions.SetEmailAction( it )
             )
-        }, modifier)
+        }, modifier, placeholder = {
+            Text("Correo electrónico")
+        })
+        Spacer(modifier = Modifier.height(20.dp))
         TextField(value = password, onValueChange = {
             viewModel.dispatch(
                 LoginComponentActions.SetPasswordAction( it )
             )
-        }, modifier)
+        }, modifier, placeholder = {
+            Text("Contraseña")
+        })
         Spacer(modifier = Modifier.height(20.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Spacer(modifier = Modifier.width(5.dp))
             Button(onClick = {
                 viewModel.dispatch(
-                    UserActions.SignInAction( email, password )
+                    UserActions.LogInAction( email, password )
                 )
             }, enabled = ! hasError && email.isNotEmpty() && password.isNotEmpty() ) {
                 Text(stringResource(id = R.string.login_component_button_login))

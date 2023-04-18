@@ -13,7 +13,7 @@ sealed class UserActions: Action() {
         val password: String
     ): UserActions()
 
-    data class SignInAction(
+    data class LogInAction(
         val email:    String,
         val password: String
     ): UserActions()
@@ -22,8 +22,16 @@ sealed class UserActions: Action() {
     object LogoutAction: UserActions()
 
     sealed class ResultUserActions: UserActions() {
+        object CreatingAccountAction:
+            ResultUserActions()
+        object TryingLoginAction:
+            ResultUserActions()
+        data class ErrorCreatingAccountAction( val message: String ):
+            ResultUserActions()
+        data class ErrorTryingLoginAction( val message: String ):
+            ResultUserActions()
         data class AccountCreatedAction( val user: User): ResultUserActions()
-        data class SignedInAction( val user: User ):      ResultUserActions()
+        data class LoggedInAction(val user: User ):      ResultUserActions()
         object LoggedOutAction:                           ResultUserActions()
         object VerificationEmailSentAction:               ResultUserActions()
     }

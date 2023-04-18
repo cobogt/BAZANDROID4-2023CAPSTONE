@@ -5,15 +5,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.jgt.wizelinebaz2023.core.mvi.Action
+import com.jgt.wizelinebaz2023.core.mvi.Controller
+import com.jgt.wizelinebaz2023.core.mvi.Store
 import com.jgt.wizelinebaz2023.core.sharedActions.UserActions
 import com.jgt.wizelinebaz2023.core.sharedModels.User
-import kotlinx.coroutines.flow.callbackFlow
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 12/04/23.
  * * * * * * * * * * **/
-object FirebaseAuthController {
+data class FirebaseAuthController(
+    override val continuationStore: Store
+): Controller {
     private val TAG = javaClass.simpleName
     private var auth: FirebaseAuth = Firebase.auth
 
@@ -24,7 +27,7 @@ object FirebaseAuthController {
             reload()
     }
 
-    fun createAccount(email: String, password: String) = callbackFlow<Action> {
+    fun createAccount(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener({ p0 -> p0?.run() }) { task ->
                 if (task.isSuccessful) {
@@ -37,19 +40,19 @@ object FirebaseAuthController {
                             email   = "${it.email}",
                         )
                     }?.also {
-                        trySend(
+                        continuationStore.dispatch(
                             UserActions.ResultUserActions.AccountCreatedAction( it ) )
                     }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    trySend(
+                    continuationStore.dispatch(
                         Action.ErrorAction("Authentication failed.", task.exception) )
                 }
             }
     }
 
-    fun signIn(email: String, password: String) = callbackFlow<Action>{
+    fun signIn(email: String, password: String) {
         // [START sign_in_with_email]
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener({ p0 -> p0?.run() }) { task ->
@@ -63,32 +66,32 @@ object FirebaseAuthController {
                             email   = "${it.email}",
                         )
                     }?.also {
-                        trySend(
-                            UserActions.ResultUserActions.SignedInAction( it ) )
+                        continuationStore.dispatch(
+                            UserActions.ResultUserActions.LoggedInAction( it ) )
                     }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    trySend(
+                    continuationStore.dispatch(
                         Action.ErrorAction("Authentication failed.", task.exception) )
                 }
             }
         // [END sign_in_with_email]
     }
 
-    fun sendEmailVerification() = callbackFlow<Action>{
+    fun sendEmailVerification() {
         // [START send_email_verification]
         val user = auth.currentUser!!
         user.sendEmailVerification()
             .addOnFailureListener {
-                trySend( Action.ErrorAction("VerificationMailSend failed.", it) )
+                continuationStore.dispatch( Action.ErrorAction("VerificationMailSend failed.", it) )
             }
             .addOnCompleteListener({ p0 -> p0?.run() }) { task ->
                 if( task.isSuccessful )
-                    trySend(
+                    continuationStore.dispatch(
                         UserActions.ResultUserActions.VerificationEmailSentAction )
                 else
-                    trySend(
+                    continuationStore.dispatch(
                         Action.ErrorAction("SendVerificationMail failed.", task.exception ))
             }
 
@@ -97,6 +100,10 @@ object FirebaseAuthController {
 
     fun signOut() {
         auth.signOut()
+
+        continuationStore.dispatch(
+            UserActions.ResultUserActions.LoggedOutAction
+        )
     }
 
     private fun reload() {

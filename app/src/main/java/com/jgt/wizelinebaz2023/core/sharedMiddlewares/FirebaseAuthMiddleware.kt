@@ -2,39 +2,44 @@ package com.jgt.wizelinebaz2023.core.sharedMiddlewares
 
 import com.jgt.wizelinebaz2023.core.mvi.Action
 import com.jgt.wizelinebaz2023.core.mvi.Middleware
+import com.jgt.wizelinebaz2023.core.mvi.Store
 import com.jgt.wizelinebaz2023.core.sharedActions.UserActions
 import com.jgt.wizelinebaz2023.core.sharedControllers.FirebaseAuthController
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
-object FirebaseAuthMiddleware: Middleware {
+data class FirebaseAuthMiddleware(
+    override val store: Store
+): Middleware {
     override fun next( action: Action ): Action {
         if( action is UserActions ) {
-            val controller = FirebaseAuthController
-            return runBlocking {
-                when( action ) {
-                    is UserActions.CreateAccountAction ->
-                        controller.createAccount( action.email, action.password ).first()
+            val controller = FirebaseAuthController( store )
 
-                    is UserActions.SignInAction ->
-                        controller.signIn( action.email, action.password ).first()
-
-                    UserActions.LogoutAction -> {
-                        controller.signOut()
-
-                        UserActions.ResultUserActions.LoggedOutAction
-                    }
-
-                    UserActions.SendEmailVerificationAction ->
-                        controller.sendEmailVerification().first()
-
-                    else -> action
+            when( action ) {
+                is UserActions.CreateAccountAction -> {
+                    controller.createAccount(action.email, action.password)
+                    return UserActions.ResultUserActions.TryingLoginAction
                 }
+
+                is UserActions.LogInAction -> {
+                    controller.signIn(action.email, action.password)
+                    return UserActions.ResultUserActions.CreatingAccountAction
+                }
+
+                UserActions.LogoutAction -> {
+                    controller.signOut()
+
+                    UserActions.ResultUserActions.LoggedOutAction
+                }
+
+                UserActions.SendEmailVerificationAction ->
+                    controller.sendEmailVerification()
+
+                else -> action
             }
+
         }
 
         return action

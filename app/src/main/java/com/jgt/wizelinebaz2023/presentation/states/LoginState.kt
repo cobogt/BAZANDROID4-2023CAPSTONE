@@ -1,5 +1,6 @@
 package com.jgt.wizelinebaz2023.presentation.states
 
+import com.jgt.wizelinebaz2023.core.mvi.Action
 import com.jgt.wizelinebaz2023.core.mvi.ProductionRule
 import com.jgt.wizelinebaz2023.core.mvi.State
 import com.jgt.wizelinebaz2023.presentation.actions.LoginComponentActions
@@ -73,7 +74,16 @@ sealed class LoginState: State() {
                         }
                     }
                 }
-            } else state
+            } else
+                if( state is LoginState && action is Action.ErrorAction ) {
+                    val errorMessage = "${action.text} ${action.exception?.message}"
+
+                    when( state ) {
+                        is LoginData  -> LoginError(state, errorMessage )
+                        is LoginError -> LoginError(state.loginData, errorMessage )
+                    }
+                } else
+                    state
     }
 
     private fun validateEmailAndPassword( email: String, password: String ): Pair<Boolean, String> {

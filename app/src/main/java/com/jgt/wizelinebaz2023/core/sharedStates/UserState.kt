@@ -1,5 +1,6 @@
 package com.jgt.wizelinebaz2023.core.sharedStates
 
+import android.util.Log
 import com.jgt.wizelinebaz2023.core.mvi.Action
 import com.jgt.wizelinebaz2023.core.sharedModels.User
 import com.jgt.wizelinebaz2023.core.mvi.Caretaker
@@ -26,7 +27,7 @@ sealed class UserState: State() {
             when( state ) {
                 Loading -> when( action ) {
                     is UserActions.ResultUserActions.AccountCreatedAction -> LoggedIn( action.user )
-                    is UserActions.ResultUserActions.SignedInAction       -> LoggedIn( action.user )
+                    is UserActions.ResultUserActions.LoggedInAction       -> LoggedIn( action.user )
                     else -> LoggedOut
                 }
 
@@ -38,7 +39,7 @@ sealed class UserState: State() {
 
                 LoggedOut -> when( action ) {
                     is UserActions.ResultUserActions.AccountCreatedAction -> LoggedIn( action.user )
-                    is UserActions.ResultUserActions.SignedInAction       -> LoggedIn( action.user )
+                    is UserActions.ResultUserActions.LoggedInAction       -> LoggedIn( action.user )
                     else -> state
                 }
             }
@@ -53,7 +54,8 @@ sealed class UserState: State() {
 class UserStateCaretaker: Caretaker {
     override val defaultState: State = UserState.LoggedOut
     override fun <T : State> saveState(state: T) {
-        TODO("Not yet implemented")
+        Log.d("UserStateCaretaker", "$state")
+        //TODO("Not yet implemented")
     }
 
     override fun <T : State> loadState(): T? {

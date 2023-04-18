@@ -41,19 +41,13 @@ class AuthenticationActivity:
                     composable("/login") { LoginComponent() }
                     composable("/signup") { SignUpComponent() }
                 }
-
-                Text("HOLA MUNDO")
             }
 
             LaunchedEffect( lifecycleScope ) {
                 coroutineScope.launch {
                     viewModelStateStore.currenAction.collect {
-                        Log.e("AuthenticationActivity", "$it")
-                        if( it is NavigationActions.NavigateToCompose ) {
-                            Log.e("AuthenticationActivity", "$it")
-
+                        if( it is NavigationActions.NavigateToCompose )
                             navController.navigate( it.composePath )
-                        }
                     }
                 }
             }

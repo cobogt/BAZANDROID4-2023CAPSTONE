@@ -16,8 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * * * * * * * * * * **/
 object AppStateStore: Store {
     override val middlewareList: List<Middleware> = listOf(
-        FirebaseAuthMiddleware,
-        NavigationMiddleware,
+        NavigationMiddleware( this ),
     )
 
     private val currentActionMutable = MutableStateFlow<Action>(Action.LoadStateAction)
