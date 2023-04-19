@@ -37,7 +37,7 @@ data class FirebaseAuthMiddleware(
                 UserActions.SendEmailVerificationAction ->
                     controller.sendEmailVerification()
 
-                else -> action
+                else -> { /* Nada por hacer */ }
             }
 
         }

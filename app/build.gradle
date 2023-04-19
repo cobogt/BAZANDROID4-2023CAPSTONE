@@ -29,6 +29,12 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     signingConfigs {
@@ -89,7 +95,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.navigation:navigation-runtime:2.5.3'
     implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.activity:activity-ktx:1.7.0' // Actualizar hasta que salga Android 14
+    implementation 'androidx.activity:activity-ktx:1.7.1' // Actualizar hasta que salga Android 14
 
     // ROOM
     def room_version = '2.5.1'

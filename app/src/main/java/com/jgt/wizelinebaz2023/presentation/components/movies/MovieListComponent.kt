@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
-import com.jgt.wizelinebaz2023.domain.AuthenticationViewModel
 import com.jgt.wizelinebaz2023.domain.MoviesViewModel
 import com.jgt.wizelinebaz2023.domain.models.MovieList
 import com.jgt.wizelinebaz2023.storage.Resource

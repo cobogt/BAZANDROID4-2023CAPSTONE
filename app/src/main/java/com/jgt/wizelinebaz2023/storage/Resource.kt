@@ -21,7 +21,7 @@ sealed class Resource<out T> {
             data: T): Resource<T> = Success( data )
 
         fun <T> error(
-            exception: Exception, folio: String? = "", message: String? = ""
+            exception: Exception, message: String? = ""
         ): Resource<T> = Error( exception, message )
 
         fun <T> loading(
