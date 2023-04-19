@@ -62,7 +62,7 @@ android {
 
     kotlinOptions { jvmTarget = 17 }
 
-    composeOptions { kotlinCompilerExtensionVersion = "1.4.0" }
+    composeOptions { kotlinCompilerExtensionVersion = "1.4.3" }
 }
 
 protobuf {
