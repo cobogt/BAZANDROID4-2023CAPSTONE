@@ -12,33 +12,33 @@ import retrofit2.http.Path
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
 interface MoviesService {
-    @GET("/movie/{movie_id}")
+    @GET("/3/movie/{movie_id}")
     suspend fun doGetMovieDetailsRequest(
         @Path("movie_id") movieId: Int
     ): MovieDetailResponse
 
-    @GET("/movie/{movie_id}/images")
+    @GET("/3/movie/{movie_id}/images")
     suspend fun doGetMovieImagesRequest(
         @Path("movie_id") movieId: Int
     ): MovieImagesResponse
 
-    @GET("/movie/{movie_id}/keywords")
+    @GET("/3/movie/{movie_id}/keywords")
     suspend fun doGetMovieKeywords(
         @Path("movie_id") movieId: Int
     ): MovieKeywordsResponse
 
-    @GET("/movie/latest")
+    @GET("/3/movie/latest")
     suspend fun doGetLatestMoviesRequest(): CategoryMovieListResponse
 
-    @GET("/movie/popular")
+    @GET("/3/movie/popular")
     suspend fun doGetPopularMoviesRequest(): CategoryMovieListResponse
 
-    @GET("/movie/upcoming")
+    @GET("/3/movie/upcoming")
     suspend fun doGetUpcomingMoviesRequest(): CategoryMovieListResponse
 
-    @GET("/movie/top_rated")
+    @GET("/3/movie/top_rated")
     suspend fun doGetTopRatedMoviesRequest(): CategoryMovieListResponse
 
-    @GET("/movie/now_playing")
+    @GET("/3/movie/now_playing")
     suspend fun doGetNowPlayingMoviesRequest(): CategoryMovieListResponse
 }

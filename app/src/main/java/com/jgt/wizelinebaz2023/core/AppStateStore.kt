@@ -1,6 +1,5 @@
 package com.jgt.wizelinebaz2023.core
 
-import com.jgt.wizelinebaz2023.core.sharedMiddlewares.FirebaseAuthMiddleware
 import com.jgt.wizelinebaz2023.core.sharedStates.UserState
 import com.jgt.wizelinebaz2023.core.mvi.Action
 import com.jgt.wizelinebaz2023.core.mvi.Middleware

@@ -73,13 +73,10 @@ class UserStateCaretaker: Caretaker {
             var id    = ""
             val className = state.javaClass.simpleName
 
-            when( state ) {
-                is UserState.LoggedIn -> {
-                    email = state.user.email
-                    name  = state.user.name
-                    id    = state.user.id
-                }
-                else -> {}
+            if( state is UserState.LoggedIn ) {
+                email = state.user.email
+                name  = state.user.name
+                id    = state.user.id
             }
 
             CoroutineScope( Dispatchers.IO ).launch {

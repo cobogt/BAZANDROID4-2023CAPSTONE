@@ -11,7 +11,7 @@ sealed class Resource<out T> {
         val data: T?, val message: String? = ""): Resource<T>()
 
     data class Error<T>(
-        val exception: Exception, val folio: String? = "", val message: String? = ""): Resource<T>()
+        val exception: Exception, val message: String? = ""): Resource<T>()
 
     data class Loading<T>(
         val data: Any? = null): Resource<T>()
@@ -22,7 +22,7 @@ sealed class Resource<out T> {
 
         fun <T> error(
             exception: Exception, folio: String? = "", message: String? = ""
-        ): Resource<T> = Error( exception, folio, message )
+        ): Resource<T> = Error( exception, message )
 
         fun <T> loading(
             data: Any? = null): Resource<T> = Loading( data )

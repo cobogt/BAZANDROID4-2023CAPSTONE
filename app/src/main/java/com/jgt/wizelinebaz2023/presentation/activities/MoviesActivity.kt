@@ -49,13 +49,12 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
             val navController = rememberNavController()
             val coroutineScope = rememberCoroutineScope()
 
-
-
             Column {
-                when( val currentUser = AppStateStore.userState.collectAsState().value ) {
-                    is UserState.LoggedIn ->
-                        Text(text = "User: ${currentUser.user.email}",
-                            modifier = Modifier.clickable {
+                val currentUser = AppStateStore.userState.collectAsState().value
+
+                if( currentUser is UserState.LoggedIn )
+                    Text(text = "User: ${currentUser.user.email}",
+                        modifier = Modifier.clickable {
                             viewModelStateStore.dispatch(
                                 UserActions.LogoutAction
                             )
@@ -67,14 +66,12 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
                             )
 
                             finish()
-                        }, fontSize = 6.em)
-                    else -> {}
-                }
+                        }, fontSize = 4.em)
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                NavHost(navController = navController, startDestination = "/list/latest") {
-                    composable("/list/latest")    { MovieListComponent("latest") }
+                NavHost(navController = navController, startDestination = "/list/upcoming") {
+                    composable("/list/upcoming")  { MovieListComponent("upcoming") }
                     composable("/list/top_rated") { MovieListComponent("top_rated") }
                     composable("/list/popular")   { MovieListComponent("popular") }
                     composable("/detail")         { MovieDetailComponent() }
@@ -82,7 +79,7 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
 
                 var selectedItem by remember { mutableStateOf("latest") }
                 val categories = mapOf(
-                    "latest"    to "Últimas",
+                    "upcoming"  to "Próximas",
                     "top_rated" to "Mejor valoradas",
                     "popular"   to "Populares",
                 )
@@ -108,7 +105,6 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
                         }
                     }
                 }
-
             }
 
             LaunchedEffect( lifecycleScope ) {
