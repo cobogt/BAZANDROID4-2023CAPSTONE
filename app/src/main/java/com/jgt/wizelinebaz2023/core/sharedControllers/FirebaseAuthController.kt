@@ -31,7 +31,6 @@ data class FirebaseAuthController(
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener({ p0 -> p0?.run() }) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
                     auth.currentUser?.let {
                         User(
@@ -44,7 +43,6 @@ data class FirebaseAuthController(
                             UserActions.ResultUserActions.AccountCreatedAction( it ) )
                     }
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
                     continuationStore.dispatch(
                         Action.ErrorAction("Authentication failed.", task.exception) )
@@ -53,11 +51,9 @@ data class FirebaseAuthController(
     }
 
     fun signIn(email: String, password: String) {
-        // [START sign_in_with_email]
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener({ p0 -> p0?.run() }) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     auth.currentUser?.let {
                         User(
@@ -70,21 +66,20 @@ data class FirebaseAuthController(
                             UserActions.ResultUserActions.LoggedInAction( it ) )
                     }
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     continuationStore.dispatch(
                         Action.ErrorAction("Authentication failed.", task.exception) )
                 }
             }
-        // [END sign_in_with_email]
     }
 
     fun sendEmailVerification() {
-        // [START send_email_verification]
         val user = auth.currentUser!!
         user.sendEmailVerification()
             .addOnFailureListener {
-                continuationStore.dispatch( Action.ErrorAction("VerificationMailSend failed.", it) )
+                continuationStore.dispatch(
+                    Action.ErrorAction("VerificationMailSend failed.", it)
+                )
             }
             .addOnCompleteListener({ p0 -> p0?.run() }) { task ->
                 if( task.isSuccessful )
@@ -94,8 +89,6 @@ data class FirebaseAuthController(
                     continuationStore.dispatch(
                         Action.ErrorAction("SendVerificationMail failed.", task.exception ))
             }
-
-        // [END send_email_verification]
     }
 
     fun signOut() {

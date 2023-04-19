@@ -1,6 +1,5 @@
 package com.jgt.wizelinebaz2023.core.mvi
 
-import android.util.Log
 import okhttp3.internal.toImmutableList
 
 /** * * * * * * * * *
@@ -16,8 +15,6 @@ abstract class State {
             .let {
                 caretaker?.let { ct ->
                     it.toMutableList().apply {
-                        Log.e("StateBASE", "$caretaker")
-
                         add { state, action ->
                             if( action is Action.LoadStateAction )
                                 ct.loadState() ?: ct.defaultState
@@ -27,9 +24,6 @@ abstract class State {
                     }.toImmutableList()
                 } ?: it
             }
-            .also {
-            Log.e("StateBASE", "$this -> $action")
-        }
         .map {
             it.invoke( this, action )
         }.firstOrNull { it != this }

@@ -36,21 +36,29 @@ fun MovieListComponent( category: String ) {
     LaunchedEffect(key1 = Unit ) {
         viewModel.getMoviesByCategory( category )
             .run {
-                consume().collect {
-                    Log.e("MovieListComponent", it.toString())
-                    movieList = it
+                consumeAsResource().collect {
+                    Log.d("MovieListComponent", it.toString())
+
+                    if( it is Resource.Success )
+                        it.data?.also { list ->
+                            movieList = list
+                        }
                 }
                 consumeAsResource()
                     .collect {movieListResource ->
-                        Log.e("MovieListComponent", movieListResource.toString())
+                        Log.d("MovieListComponent", movieListResource.toString())
                         when( movieListResource ) {
-                            is Resource.Error   -> errorMessage = "${movieListResource.message} ${movieListResource.exception.message}"
+                            is Resource.Error   -> errorMessage =
+                                "Error al obtener la lista de elementos: " +
+                                        "${movieListResource.exception.message}"
+
                             is Resource.Loading -> isLoading = true
-                            is Resource.Success -> movieList = movieListResource.data ?: MovieList()
+
+                            is Resource.Success -> movieList =
+                                movieListResource.data ?: MovieList()
                         }
                     }
             }
-
     }
 
     Column(
@@ -69,7 +77,8 @@ fun MovieListComponent( category: String ) {
                     movieList.movies.getOrNull(movieIndex)?.also { movie ->
                         Text(text = movie.name)
                         Text(text = movie.imageUrl)
-                        GlideImage(model = "https://image.tmdb.org/t/p/original/${movie.imageUrl}", contentDescription = movie.name)
+                        GlideImage(model = "https://image.tmdb.org/t/p/original/${movie.imageUrl}",
+                            contentDescription = movie.name)
                     }
                 }
 
