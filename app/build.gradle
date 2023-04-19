@@ -19,10 +19,12 @@ android {
     namespace 'com.jgt.wizelinebaz2023'
     compileSdk 33
 
+
     defaultConfig {
         applicationId "com.jgt.wizelinebaz2023"
         minSdk 29
         targetSdk 33
+        
         versionCode 1
         versionName "1.0"
 
@@ -98,7 +100,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.navigation:navigation-runtime:2.5.3'
     implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.activity:activity-ktx:1.7.0-alpha04'
+    implementation 'androidx.activity:activity-ktx:1.7.0'
 
     // ROOM
     implementation "androidx.room:room-runtime:2.5.1"
@@ -113,7 +115,7 @@ dependencies {
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
 
     // PROTOBUF: Parser de archivos .proto a clases Java, necesario para Datastore
-    implementation 'com.google.protobuf:protobuf-javalite:3.18.0'
+    implementation 'com.google.protobuf:protobuf-javalite:3.21.7'
 
     // GSON: Converter HTTP y parser de Json
     implementation 'com.google.code.gson:gson:2.10'
