@@ -61,10 +61,10 @@ fun LoginComponent() {
     }
 
     // Variables locales
-    var email        by rememberSaveable { mutableStateOf("") }
-    var password     by rememberSaveable { mutableStateOf("") }
-    var hasError     by rememberSaveable { mutableStateOf(false) }
-    var errorMessage by rememberSaveable { mutableStateOf("") }
+    var email        by remember { mutableStateOf("") }
+    var password     by remember { mutableStateOf("") }
+    var hasError     by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
 
     // Aplanado de estados
 

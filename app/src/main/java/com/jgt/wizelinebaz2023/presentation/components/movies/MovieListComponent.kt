@@ -39,43 +39,33 @@ fun MovieListComponent( category: String ) {
     val viewModel: MoviesViewModel = (currentActivity as ActivityWithViewModelStoreInterface)
         .viewModelStateStore as MoviesViewModel
 
-    var errorMessage by remember { mutableStateOf("") }
-    var movieList    by remember { mutableStateOf( MovieList() ) }
-    var refreshing   by remember { mutableStateOf(false) }
+    var errorMessage    by remember { mutableStateOf("") }
+    var movieList       by remember { mutableStateOf( MovieList() ) }
+    var refreshing      by remember { mutableStateOf(false) }
+    var runCoroutineInt by remember { mutableStateOf( 0 ) }
     val moviesRepository = remember { viewModel.getMoviesByCategory( category ) }
     val coroutineScope   = rememberCoroutineScope()
 
     val refreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = {
         coroutineScope.launch {
-            refreshing = true
+            try { moviesRepository.fetch() }
+            catch (e: Exception) { errorMessage = "${e.message}" }
 
-            moviesRepository.fetch()
-
-            refreshing = false
+            runCoroutineInt += 1
         }
     })
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = runCoroutineInt) {
         coroutineScope.launch {
-
             moviesRepository
                 .consumeAsResource()
                 .collect { moviesResource ->
-
-                    Log.e("AAAAA", moviesResource.toString())
-
+                    refreshing = false
+                    Log.w("AAA", "Refreshing $refreshing, Resource: $moviesResource")
                     when( moviesResource ) {
-                        is Resource.Error   -> {
-                            errorMessage = "${moviesResource.exception.message}"
-                            refreshing = false
-                        }
-                        is Resource.Loading -> {
-                            refreshing = true
-                        }
-                        is Resource.Success -> {
-                            refreshing = false
-                            movieList = moviesResource.data ?: MovieList()
-                        }
+                        is Resource.Error   -> errorMessage = "${moviesResource.exception.message}"
+                        is Resource.Loading -> refreshing = true
+                        is Resource.Success -> movieList = moviesResource.data ?: MovieList()
                     }
                 }
         }
@@ -83,23 +73,22 @@ fun MovieListComponent( category: String ) {
 
     Column(
         Modifier
-
             .fillMaxWidth()
             .fillMaxHeight()
             .pullRefresh(state = refreshState)
     ) {
         if( errorMessage.isNotEmpty() )
             Text(text = "Error al obtener la lista de elementos: $errorMessage",
-            Modifier.background(Color.Red).fillMaxWidth().padding(1.dp))
-
+                Modifier
+                    .background(Color.Red)
+                    .fillMaxWidth()
+                    .padding(1.dp))
         Box(
             Modifier
                 .padding(top = 10.dp)
                 .background(Color.Cyan)
                 .fillMaxWidth()
         ) {
-
-
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 128.dp),
                 Modifier
@@ -107,15 +96,13 @@ fun MovieListComponent( category: String ) {
                     .fillMaxHeight()
             ) {
                 items(movieList.movies.count()) { movieIndex ->
-                    Box() {
+                    Box {
                         movieList.movies.getOrNull(movieIndex)?.also { movie ->
                             Text(text = movie.name)
-                            Text(text = movie.imageUrl)
                             GlideImage(model = "https://image.tmdb.org/t/p/original/${movie.imageUrl}",
                                 contentDescription = movie.name)
                         }
                     }
-
                 }
             }
 

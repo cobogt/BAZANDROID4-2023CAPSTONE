@@ -22,16 +22,10 @@ sealed class UserActions: Action() {
     object LogoutAction: UserActions()
 
     sealed class ResultUserActions: UserActions() {
-        object CreatingAccountAction:
-            ResultUserActions()
-        object TryingLoginAction:
-            ResultUserActions()
-        data class ErrorCreatingAccountAction( val message: String ):
-            ResultUserActions()
-        data class ErrorTryingLoginAction( val message: String ):
-            ResultUserActions()
+        object CreatingAccountAction:                     ResultUserActions()
+        object TryingLoginAction:                         ResultUserActions()
         data class AccountCreatedAction( val user: User): ResultUserActions()
-        data class LoggedInAction(val user: User ):      ResultUserActions()
+        data class LoggedInAction(val user: User ):       ResultUserActions()
         object LoggedOutAction:                           ResultUserActions()
         object VerificationEmailSentAction:               ResultUserActions()
     }
