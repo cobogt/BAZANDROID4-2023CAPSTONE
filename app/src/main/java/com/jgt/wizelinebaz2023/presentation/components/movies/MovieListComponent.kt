@@ -2,12 +2,19 @@ package com.jgt.wizelinebaz2023.presentation.components.movies
 
 import android.app.Activity
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -16,12 +23,15 @@ import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
 import com.jgt.wizelinebaz2023.domain.MoviesViewModel
 import com.jgt.wizelinebaz2023.domain.models.MovieList
 import com.jgt.wizelinebaz2023.storage.Resource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
-@OptIn(ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun MovieListComponent( category: String ) {
     // Enlace desde estado del Store y hacia Dispatcher
@@ -30,59 +40,86 @@ fun MovieListComponent( category: String ) {
         .viewModelStateStore as MoviesViewModel
 
     var errorMessage by remember { mutableStateOf("") }
-    var isLoading    by remember { mutableStateOf( false ) }
     var movieList    by remember { mutableStateOf( MovieList() ) }
+    var refreshing   by remember { mutableStateOf(false) }
+    val moviesRepository = remember { viewModel.getMoviesByCategory( category ) }
+    val coroutineScope   = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = Unit ) {
-        viewModel.getMoviesByCategory( category )
-            .run {
-                consumeAsResource().collect {
-                    Log.d("MovieListComponent", it.toString())
+    val refreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = {
+        coroutineScope.launch {
+            refreshing = true
 
-                    if( it is Resource.Success )
-                        it.data?.also { list ->
-                            movieList = list
+            moviesRepository.fetch()
+
+            refreshing = false
+        }
+    })
+
+    LaunchedEffect(key1 = Unit) {
+        coroutineScope.launch {
+
+            moviesRepository
+                .consumeAsResource()
+                .collect { moviesResource ->
+
+                    Log.e("AAAAA", moviesResource.toString())
+
+                    when( moviesResource ) {
+                        is Resource.Error   -> {
+                            errorMessage = "${moviesResource.exception.message}"
+                            refreshing = false
                         }
-                }
-                consumeAsResource()
-                    .collect {movieListResource ->
-                        Log.d("MovieListComponent", movieListResource.toString())
-                        when( movieListResource ) {
-                            is Resource.Error   -> errorMessage =
-                                "Error al obtener la lista de elementos: " +
-                                        "${movieListResource.exception.message}"
-
-                            is Resource.Loading -> isLoading = true
-
-                            is Resource.Success -> movieList =
-                                movieListResource.data ?: MovieList()
+                        is Resource.Loading -> {
+                            refreshing = true
+                        }
+                        is Resource.Success -> {
+                            refreshing = false
+                            movieList = moviesResource.data ?: MovieList()
                         }
                     }
-            }
+                }
+        }
     }
 
     Column(
-        Modifier.fillMaxHeight(.9F)
+        Modifier
+
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .pullRefresh(state = refreshState)
     ) {
-        Text(text = "MovieListComponent")
-        Spacer(modifier = Modifier.height(5.dp))
         if( errorMessage.isNotEmpty() )
-            Text(text = errorMessage)
+            Text(text = "Error al obtener la lista de elementos: $errorMessage",
+            Modifier.background(Color.Red).fillMaxWidth().padding(1.dp))
 
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 128.dp)
+        Box(
+            Modifier
+                .padding(top = 10.dp)
+                .background(Color.Cyan)
+                .fillMaxWidth()
         ) {
-            items(movieList.movies.count()) { movieIndex ->
-                Box() {
-                    movieList.movies.getOrNull(movieIndex)?.also { movie ->
-                        Text(text = movie.name)
-                        Text(text = movie.imageUrl)
-                        GlideImage(model = "https://image.tmdb.org/t/p/original/${movie.imageUrl}",
-                            contentDescription = movie.name)
-                    }
-                }
 
+
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 128.dp),
+                Modifier
+                    .background(Color.Blue)
+                    .fillMaxHeight()
+            ) {
+                items(movieList.movies.count()) { movieIndex ->
+                    Box() {
+                        movieList.movies.getOrNull(movieIndex)?.also { movie ->
+                            Text(text = movie.name)
+                            Text(text = movie.imageUrl)
+                            GlideImage(model = "https://image.tmdb.org/t/p/original/${movie.imageUrl}",
+                                contentDescription = movie.name)
+                        }
+                    }
+
+                }
             }
+
+            PullRefreshIndicator(refreshing, refreshState, Modifier.align(Alignment.TopCenter))
         }
     }
 }
