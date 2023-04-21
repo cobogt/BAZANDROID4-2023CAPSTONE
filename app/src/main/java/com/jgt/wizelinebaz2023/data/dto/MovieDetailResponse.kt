@@ -27,7 +27,7 @@ data class MovieDetailResponse(
     @SerializedName("poster_path")          val posterPath:           String? = null,
     @SerializedName("production_companies") val productionCompanies:  List<ProductionCompany> = listOf(),
     @SerializedName("production_countries") val productionCountries:  List<ProductionCountry> = listOf(),
-    @SerializedName("spoken_languages")     val spokenLanguages:      List<SpokenLanguage> = listOf(),
+    @SerializedName("spoken_languages")     val spokenLanguages:      List<SpokenLanguage>    = listOf(),
     @SerializedName("release_date")         val releaseDate:          String,
     @SerializedName("vote_average")         val voteAverage:          Number,
     @SerializedName("vote_count")           val voteCount:            Int,

@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
 @Composable
-fun MovieDetailComponent() {
-    Text(text = "MovieDetailComponent")
+fun MovieDetailComponent( movieId: Int ) {
+    Text(text = "MovieDetailComponent: $movieId")
+
 }
