@@ -1,20 +1,23 @@
 package com.jgt.wizelinebaz2023.data
 
 import android.util.Log
-import com.jgt.wizelinebaz2023.data.dto.MovieDetailResponse
 import com.jgt.wizelinebaz2023.domain.models.MovieDetail
 import com.jgt.wizelinebaz2023.domain.models.MovieList
 import com.jgt.wizelinebaz2023.storage.RepositoryStrategy
 import com.jgt.wizelinebaz2023.storage.local.room.MoviesDatabase
 import com.jgt.wizelinebaz2023.storage.remote.ApiClient
+import javax.inject.Inject
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
-class MoviesRepository {
+
+class MoviesRepository @Inject constructor(
+    moviesDatabase: MoviesDatabase
+){
     private val moviesApiClient = ApiClient.createService( MoviesService::class.java )
-    private val moviesDao       = MoviesDatabase.getDatabase().moviesDao()
+    private val moviesDao       = moviesDatabase.moviesDao()
 
     fun getMovieListByCategory( category: String ) =
         RepositoryStrategy.FetchAndTransformStrategy(

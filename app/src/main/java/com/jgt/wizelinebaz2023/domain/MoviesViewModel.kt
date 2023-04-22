@@ -7,20 +7,23 @@ import com.jgt.wizelinebaz2023.core.mvi.Middleware
 import com.jgt.wizelinebaz2023.core.mvi.Store
 import com.jgt.wizelinebaz2023.core.sharedMiddlewares.FirebaseAuthMiddleware
 import com.jgt.wizelinebaz2023.data.MoviesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
-class MoviesViewModel: Store, ViewModel() {
+@HiltViewModel
+class MoviesViewModel @Inject constructor(
+    private val moviesRepository: MoviesRepository
+): Store, ViewModel() {
     override val middlewareList: List<Middleware> = listOf(
         FirebaseAuthMiddleware( this ),
     )
-
-    private val moviesRepository = MoviesRepository()
 
     fun getMoviesByCategory( category: String ) =
         moviesRepository.getMovieListByCategory( category )

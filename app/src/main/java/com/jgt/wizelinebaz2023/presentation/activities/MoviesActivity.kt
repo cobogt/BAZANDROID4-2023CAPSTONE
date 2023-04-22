@@ -48,12 +48,14 @@ import com.jgt.wizelinebaz2023.core.sharedStates.UserState
 import com.jgt.wizelinebaz2023.domain.MoviesViewModel
 import com.jgt.wizelinebaz2023.presentation.components.movies.MovieDetailComponent
 import com.jgt.wizelinebaz2023.presentation.components.movies.MovieListComponent
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
+@AndroidEntryPoint
 class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
     override val viewModelStateStore by viewModels<MoviesViewModel>()
 

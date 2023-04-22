@@ -3,17 +3,14 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
     id 'com.google.protobuf'
-    id 'kotlin-kapt'
     id 'com.google.devtools.ksp'
     id 'io.gitlab.arturbosch.detekt'
+    id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
-
-// Initializes a new Properties() object called keystoreProperties.
 def keystoreProperties = new Properties()
-
-// Loads the keystore.properties file into the keystoreProperties object.
 keystoreProperties.load( new FileInputStream(keystorePropertiesFile) )
 
 android {
@@ -70,6 +67,8 @@ android {
     kotlinOptions { jvmTarget = 17 }
 
     composeOptions { kotlinCompilerExtensionVersion = "1.4.3" }
+
+    hilt { enableAggregatingTask = true }
 }
 
 protobuf {
@@ -90,6 +89,10 @@ detekt {
     buildUponDefaultConfig = true
 }
 
+kapt {
+    correctErrorTypes true
+}
+
 dependencies {
     def composeBom = platform('androidx.compose:compose-bom:2023.01.00')
     implementation composeBom
@@ -103,6 +106,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-runtime:2.5.3'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.activity:activity-ktx:1.7.1' // Actualizar hasta que salga Android 14
+
+    // HILT
+    implementation "com.google.dagger:hilt-android:2.45"
+    kapt "com.google.dagger:hilt-compiler:2.45"
 
     // ROOM
     def room_version = '2.5.1'
