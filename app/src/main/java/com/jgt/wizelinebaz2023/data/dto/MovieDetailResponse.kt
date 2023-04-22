@@ -1,6 +1,7 @@
 package com.jgt.wizelinebaz2023.data.dto
 
 import com.google.gson.annotations.SerializedName
+import com.jgt.wizelinebaz2023.domain.models.MovieDetail
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -13,7 +14,7 @@ data class MovieDetailResponse(
                                             val genres:               List<Genre> = listOf(),
                                             val homepage:             String? = null,
                                             val overview:             String? = null,
-                                            val popularity:           Int,
+                                            val popularity:           Float,
                                             val revenue:              Int,
                                             val runtime:              Int? = null,
                                             val status:               String,
@@ -29,7 +30,7 @@ data class MovieDetailResponse(
     @SerializedName("production_countries") val productionCountries:  List<ProductionCountry> = listOf(),
     @SerializedName("spoken_languages")     val spokenLanguages:      List<SpokenLanguage>    = listOf(),
     @SerializedName("release_date")         val releaseDate:          String,
-    @SerializedName("vote_average")         val voteAverage:          Number,
+    @SerializedName("vote_average")         val voteAverage:          Float,
     @SerializedName("vote_count")           val voteCount:            Int,
 ) {
     data class Genre (
@@ -52,5 +53,11 @@ data class MovieDetailResponse(
     data class SpokenLanguage(
         val name: String,
         @SerializedName("iso_3166_1") val iso3366i: String,
+    )
+
+    fun toModel() = MovieDetail(
+        id       = id,
+        name     = title,
+        imageUrl = "https://image.tmdb.org/t/p/original/${posterPath}"
     )
 }

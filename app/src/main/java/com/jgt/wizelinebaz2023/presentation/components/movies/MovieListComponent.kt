@@ -49,9 +49,7 @@ import kotlinx.coroutines.launch
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
-@OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterialApi::class,
-    ExperimentalFoundationApi::class
-)
+@OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun MovieListComponent( category: String ) {
     // Enlace desde estado del Store y hacia Dispatcher
@@ -109,15 +107,10 @@ fun MovieListComponent( category: String ) {
                 .pullRefresh(state = refreshState, true)
         ) {
             if (errorMessage.isNotEmpty())
-                Text(
-                    text = "Error al obtener los datos: $errorMessage",
-                    Modifier
-                        .padding(15.dp)
-                        .background(
-                            Color(red =0F, green =0F, blue =0F, alpha = 0.05F)
-                        ),
-                    textAlign = TextAlign.Center
-                )
+                Text(text = "Error al obtener los datos: $errorMessage",
+                    Modifier.padding(15.dp)
+                        .background(Color(red =0F, green =0F, blue =0F, alpha = 0.05F)),
+                    textAlign = TextAlign.Center)
 
             Box(
                 Modifier

@@ -12,11 +12,9 @@ import okhttp3.Response
 class ApiKeyInterceptor: Interceptor {
     private val apiKey = BuildConfig.API_KEY
 
-    init {
-        Log.e("ApiKeyInterceptor", apiKey)
-    }
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
+
         return chain.proceed(
             request.newBuilder()
                 .url(

@@ -1,6 +1,7 @@
 package com.jgt.wizelinebaz2023.data
 
 import android.util.Log
+import com.jgt.wizelinebaz2023.data.dto.MovieDetailResponse
 import com.jgt.wizelinebaz2023.domain.models.MovieDetail
 import com.jgt.wizelinebaz2023.domain.models.MovieList
 import com.jgt.wizelinebaz2023.storage.RepositoryStrategy
@@ -36,6 +37,12 @@ class MoviesRepository {
                             "${mli.posterPath}" )
                     })
             },
+        )
+
+    fun getMovieDetailById( movieId: Int ) =
+        RepositoryStrategy.FetchAndTransformStrategy(
+            remoteSourceData = { moviesApiClient.doGetMovieDetailsRequest( movieId ) },
+            remoteToModelTransform = { it.toModel() }
         )
 
     /*fun getMovieListByCategoryRoom( category: String ) =

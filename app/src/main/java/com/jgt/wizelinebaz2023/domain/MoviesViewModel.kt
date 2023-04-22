@@ -21,8 +21,12 @@ class MoviesViewModel: Store, ViewModel() {
     )
 
     private val moviesRepository = MoviesRepository()
-    fun getMoviesByCategory(category: String) =
+
+    fun getMoviesByCategory( category: String ) =
         moviesRepository.getMovieListByCategory( category )
+
+    fun getMovieDetailById( movieId: Int ) =
+        moviesRepository.getMovieDetailById( movieId )
 
     private val currentActionMutable = MutableStateFlow<Action>(Action.LoadStateAction)
     override val currenAction: StateFlow<Action> = currentActionMutable.asStateFlow()
