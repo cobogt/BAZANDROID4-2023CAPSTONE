@@ -5,7 +5,6 @@ import com.jgt.wizelinebaz2023.core.mvi.ProductionRule
 import com.jgt.wizelinebaz2023.core.mvi.State
 import com.jgt.wizelinebaz2023.presentation.actions.SignUpComponentActions
 
-
 /** * * * * * * * * *
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 18/04/23.

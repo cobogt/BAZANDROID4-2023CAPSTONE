@@ -1,6 +1,9 @@
 package com.jgt.wizelinebaz2023.storage.local.room.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import com.jgt.wizelinebaz2023.storage.local.room.entities.base.ImagesTable
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -8,4 +11,6 @@ import androidx.room.Dao
  * * * * * * * * * * **/
 @Dao
 interface ImagesDao {
+    @Insert( onConflict = OnConflictStrategy.REPLACE )
+    fun insert( image: ImagesTable)
 }

@@ -46,10 +46,10 @@ abstract class MoviesDatabase: RoomDatabase() {
     abstract fun keywordsDao():   KeywordsDao
 
     companion object {
-        private var moviesDatabase: MoviesDatabase? = null
+        private var instanceOfMoviesDatabase: MoviesDatabase? = null
 
         fun getDatabase(): MoviesDatabase {
-            moviesDatabase = moviesDatabase ?: synchronized( this ) {
+            instanceOfMoviesDatabase = instanceOfMoviesDatabase ?: synchronized( this ) {
                 Room.databaseBuilder(
                     context = BaseApplication.appContext,
                     MoviesDatabase::class.java,
@@ -57,7 +57,7 @@ abstract class MoviesDatabase: RoomDatabase() {
                 ).build()
             }
 
-            return moviesDatabase !!
+            return instanceOfMoviesDatabase !!
         }
     }
 }
