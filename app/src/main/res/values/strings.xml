@@ -6,4 +6,5 @@
     <string name="signup_component_label_header">Nuevo usuario</string>
     <string name="signup_component_button_signup">Registrarse</string>
     <string name="signup_component_label_login">Iniciar sesión</string>
+    <string name="for_adults_advice">Película para adultos</string>
 </resources>

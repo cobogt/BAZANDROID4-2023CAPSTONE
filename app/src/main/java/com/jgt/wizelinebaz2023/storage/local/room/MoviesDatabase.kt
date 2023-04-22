@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.jgt.wizelinebaz2023.core.BaseApplication
 import com.jgt.wizelinebaz2023.storage.local.room.dao.CategoriesDao
 import com.jgt.wizelinebaz2023.storage.local.room.dao.ImagesDao
 import com.jgt.wizelinebaz2023.storage.local.room.dao.KeywordsDao

@@ -13,9 +13,7 @@ import javax.inject.Inject
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
 
-class MoviesRepository @Inject constructor(
-    moviesDatabase: MoviesDatabase
-){
+class MoviesRepository @Inject constructor( moviesDatabase: MoviesDatabase ){
     private val moviesApiClient = ApiClient.createService( MoviesService::class.java )
     private val moviesDao       = moviesDatabase.moviesDao()
 

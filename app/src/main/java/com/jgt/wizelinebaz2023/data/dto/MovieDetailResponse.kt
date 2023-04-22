@@ -56,8 +56,12 @@ data class MovieDetailResponse(
     )
 
     fun toModel() = MovieDetail(
-        id       = id,
-        name     = title,
-        imageUrl = "https://image.tmdb.org/t/p/original/${posterPath}"
+        id          = id,
+        name        = title,
+        imageUrl    = "https://image.tmdb.org/t/p/original/${posterPath}",
+        releaseDate = releaseDate,
+        status      = status,
+        budget      = budget,
+        adult       = adult
     )
 }
