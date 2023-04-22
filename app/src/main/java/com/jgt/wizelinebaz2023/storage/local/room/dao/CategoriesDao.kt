@@ -1,6 +1,10 @@
 package com.jgt.wizelinebaz2023.storage.local.room.dao
 
-import androidx.room.*
+import androidx.room.Query
+import androidx.room.Dao
+import androidx.room.RewriteQueriesToDropUnusedColumns
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.CategoriesTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.MoviesTable
 import kotlinx.coroutines.flow.Flow

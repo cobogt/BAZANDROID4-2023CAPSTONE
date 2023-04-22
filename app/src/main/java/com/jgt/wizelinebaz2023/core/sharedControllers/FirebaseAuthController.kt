@@ -17,7 +17,7 @@ import com.jgt.wizelinebaz2023.core.sharedModels.User
 data class FirebaseAuthController(
     override val continuationStore: Store
 ): Controller {
-    private val TAG = javaClass.simpleName
+    private val tag = javaClass.simpleName
     private var auth: FirebaseAuth = Firebase.auth
 
     init {
@@ -31,7 +31,7 @@ data class FirebaseAuthController(
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener({ p0 -> p0?.run() }) { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "createUserWithEmail:success")
+                    Log.d(tag, "createUserWithEmail:success")
                     auth.currentUser?.let {
                         User(
                             id      = it.uid,
@@ -43,7 +43,7 @@ data class FirebaseAuthController(
                             UserActions.ResultUserActions.AccountCreatedAction( it ) )
                     }
                 } else {
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                    Log.w(tag, "createUserWithEmail:failure", task.exception)
                     continuationStore.dispatch(
                         Action.ErrorAction("Authentication failed.", task.exception) )
                 }
@@ -54,7 +54,7 @@ data class FirebaseAuthController(
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener({ p0 -> p0?.run() }) { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "signInWithEmail:success")
+                    Log.d(tag, "signInWithEmail:success")
                     auth.currentUser?.let {
                         User(
                             id      = it.uid,
@@ -66,7 +66,7 @@ data class FirebaseAuthController(
                             UserActions.ResultUserActions.LoggedInAction( it ) )
                     }
                 } else {
-                    Log.w(TAG, "signInWithEmail:failure", task.exception)
+                    Log.w(tag, "signInWithEmail:failure", task.exception)
                     continuationStore.dispatch(
                         Action.ErrorAction("Authentication failed.", task.exception) )
                 }
@@ -99,7 +99,5 @@ data class FirebaseAuthController(
         )
     }
 
-    private fun reload() {
-        // TODO: Recarga de perfil
-    }
+    private fun reload() { /* No aplica */ }
 }

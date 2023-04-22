@@ -5,6 +5,7 @@ plugins {
     id 'com.google.protobuf'
     id 'kotlin-kapt'
     id 'com.google.devtools.ksp'
+    id 'io.gitlab.arturbosch.detekt'
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -81,6 +82,12 @@ protobuf {
             }
         }
     }
+}
+
+detekt {
+    toolVersion = "1.23.0-RC1"
+    config = files("config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
 }
 
 dependencies {

@@ -9,8 +9,6 @@ import com.jgt.wizelinebaz2023.presentation.actions.SignUpComponentActions
 /** * * * * * * * * *
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 18/04/23.
- *
- * TODO: Mejorar el proceso de encadenar validaciones
  * * * * * * * * * * **/
 sealed class SignupState: State() {
     data class SignupData(
@@ -131,31 +129,34 @@ sealed class SignupState: State() {
         )
     }
 
-    private fun validateEmail(email: String ): Pair<Boolean, String> {
-        if (email.isEmpty())
-            return false to "El email no debe estar vacío."
+    private fun validateEmail(email: String ): Pair<Boolean, String> =
+        when {
+            email.isEmpty() -> false to "El email no debe estar vacío."
+            ! email.contains(Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$")) ->
+                false to "El email no tiene un formato correcto."
+            else -> true to ""
+        }
 
-        if ( ! email.contains(Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$")) )
-            return false to "El email no tiene un formato correcto."
-
-        return true to ""
-    }
 
     private fun validatePassword( password: String ): Pair<Boolean, String> {
-        if( password.length < 5 )
+        if( password.length < minPasswordLength)
             return false to "La longitud mínima de la contraseña es de 5 caracteres"
 
         return true to ""
     }
 
-    private fun validatePasswordRepeat( password: String, passwordRepeat: String ): Pair<Boolean, String> {
-        if( password != passwordRepeat )
-            return false to "Las contraseñas no coinciden"
-
+    private fun validatePasswordRepeat( password: String, passwordRepeat: String ):
+        Pair<Boolean, String> {
         val validatePassword = validatePassword( passwordRepeat )
-        if(!validatePassword.first)
-            return false to validatePassword.second
 
-        return true to ""
+        return when {
+            password != passwordRepeat -> false to "Las contraseñas no coinciden"
+            ! validatePassword.first   -> false to validatePassword.second
+            else                       -> true  to ""
+        }
+    }
+
+    companion object {
+        const val minPasswordLength = 5
     }
 }

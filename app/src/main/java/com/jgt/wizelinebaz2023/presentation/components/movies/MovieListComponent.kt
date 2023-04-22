@@ -60,7 +60,6 @@ fun MovieListComponent( category: String ) {
         .viewModelStateStore as MoviesViewModel
 
     val haptic = LocalHapticFeedback.current
-    val view = LocalView.current
 
     var errorMessage    by remember { mutableStateOf("") }
     var movieList       by remember { mutableStateOf( MovieList() ) }
@@ -97,7 +96,7 @@ fun MovieListComponent( category: String ) {
                     when( moviesResource ) {
                         is Resource.Error   -> errorMessage = "${moviesResource.exception.message}"
                         is Resource.Loading -> isRefreshing = true
-                        is Resource.Success -> movieList = moviesResource.data ?: MovieList()
+                        is Resource.Success -> movieList    = moviesResource.data ?: MovieList()
                     }
                 }
         }
@@ -115,7 +114,7 @@ fun MovieListComponent( category: String ) {
                     Modifier
                         .padding(15.dp)
                         .background(
-                            Color(0F, 0F, 0F, 0.05F)
+                            Color(red =0F, green =0F, blue =0F, alpha = 0.05F)
                         ),
                     textAlign = TextAlign.Center
                 )

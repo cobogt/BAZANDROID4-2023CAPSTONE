@@ -40,10 +40,10 @@ import com.jgt.wizelinebaz2023.storage.local.room.entities.crossref.MoviesKeywor
     version = 1
 )
 abstract class MoviesDatabase: RoomDatabase() {
-    abstract fun moviesDao(): MoviesDao
+    abstract fun moviesDao():     MoviesDao
     abstract fun categoriesDao(): CategoriesDao
-    abstract fun imagesDao(): ImagesDao
-    abstract fun keywordsDao(): KeywordsDao
+    abstract fun imagesDao():     ImagesDao
+    abstract fun keywordsDao():   KeywordsDao
 
     companion object {
         private var moviesDatabase: MoviesDatabase? = null

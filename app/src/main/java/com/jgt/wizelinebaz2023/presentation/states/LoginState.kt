@@ -98,20 +98,22 @@ sealed class LoginState: State() {
         )
     }
 
-    private fun validateEmail(email: String ): Pair<Boolean, String> {
-        if (email.isEmpty())
-            return false to "El email no debe estar vacío."
+    private fun validateEmail(email: String ): Pair<Boolean, String> =
+        when {
+            email.isEmpty() -> false to "El email no debe estar vacío."
+            ! email.contains(Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$")) ->
+                    false to "El email no tiene un formato correcto."
+            else -> true to ""
+        }
 
-        if ( ! email.contains(Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$")) )
-            return false to "El email no tiene un formato correcto."
+    private fun validatePassword( password: String ): Pair<Boolean, String> {
+        if( password.length < minPasswordLength )
+            return false to "La longitud mínima de la contraseña es de 5 caracteres"
 
         return true to ""
     }
 
-    private fun validatePassword( password: String ): Pair<Boolean, String> {
-        if( password.length < 5 )
-            return false to "La longitud mínima de la contraseña es de 5 caracteres"
-
-        return true to ""
+    companion object {
+        const val minPasswordLength = 5
     }
 }

@@ -14,7 +14,7 @@ import com.jgt.wizelinebaz2023.core.sharedStates.caretakers.UserStateCaretaker
  * * * * * * * * * * **/
 sealed class UserState: State() {
     protected val sharedCaretaker: UserStateCaretaker = UserStateCaretaker()
-
+    // (S)LoggedOut -> (A)LoginAction -> (A)ResultUserActions.LoggedInAction -> (S)LogeddIn
     object Loading: UserState() {
         override val caretaker: Caretaker = sharedCaretaker
         override val productionRules = sharedProductionRules }

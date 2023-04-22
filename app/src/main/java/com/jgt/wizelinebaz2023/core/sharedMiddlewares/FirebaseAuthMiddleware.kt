@@ -18,15 +18,11 @@ data class FirebaseAuthMiddleware(
             val controller = FirebaseAuthController( store )
 
             when( action ) {
-                is UserActions.CreateAccountAction -> {
+                is UserActions.CreateAccountAction ->
                     controller.createAccount(action.email, action.password)
-                    return UserActions.ResultUserActions.TryingLoginAction
-                }
 
-                is UserActions.LogInAction -> {
+                is UserActions.LogInAction ->
                     controller.signIn(action.email, action.password)
-                    return UserActions.ResultUserActions.CreatingAccountAction
-                }
 
                 UserActions.LogoutAction -> {
                     controller.signOut()
@@ -39,7 +35,6 @@ data class FirebaseAuthMiddleware(
 
                 else -> { /* Nada por hacer */ }
             }
-
         }
 
         return action
