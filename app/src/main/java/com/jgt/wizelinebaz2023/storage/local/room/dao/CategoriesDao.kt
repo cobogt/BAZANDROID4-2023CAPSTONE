@@ -20,7 +20,7 @@ interface CategoriesDao {
 
     @RewriteQueriesToDropUnusedColumns
     @Query(
-        "SELECT * " +
+        "SELECT movies.*, categories.id as category_id, categories.name as category_name " +
         "FROM movies " +
         "LEFT JOIN movies_categories ON movies_categories.movieId = movies.id " +
         "LEFT JOIN categories ON movies_categories.categoryId = categories.id " +
