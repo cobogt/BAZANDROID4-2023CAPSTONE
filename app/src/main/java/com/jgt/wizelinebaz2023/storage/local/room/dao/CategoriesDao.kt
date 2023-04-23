@@ -2,7 +2,6 @@ package com.jgt.wizelinebaz2023.storage.local.room.dao
 
 import androidx.room.Query
 import androidx.room.Dao
-import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.CategoriesTable
@@ -18,13 +17,12 @@ interface CategoriesDao {
     @Query("SELECT * FROM categories")
     fun getAllCategories(): Flow<List<CategoriesTable>>
 
-    @RewriteQueriesToDropUnusedColumns
     @Query(
         "SELECT movies.*, categories.id as category_id, categories.name as category_name " +
-        "FROM movies " +
-        "LEFT JOIN movies_categories ON movies_categories.movieId = movies.id " +
-        "LEFT JOIN categories ON movies_categories.categoryId = categories.id " +
-        "WHERE categories.name = :categoryName")
+        "FROM categories " +
+        "JOIN movies_categories ON movies_categories.movieId = movies.id " +
+        "JOIN movies ON movies_categories.categoryId = categories.id " +
+        "WHERE categories.name LIKE :categoryName")
     fun getMoviesFromCategory( categoryName: String ): Flow<List<MoviesTable>>
 
     @Insert( onConflict = OnConflictStrategy.IGNORE )

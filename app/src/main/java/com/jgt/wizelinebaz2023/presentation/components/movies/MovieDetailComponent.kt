@@ -2,14 +2,18 @@ package com.jgt.wizelinebaz2023.presentation.components.movies
 
 import android.app.Activity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Block
+import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -56,6 +60,7 @@ fun MovieDetailComponent( movieId: Int ) {
     var isRefreshing         by remember { mutableStateOf(false) }
     var runCoroutineInt      by remember { mutableStateOf( 0 ) }
     var movieDetail          by remember { mutableStateOf( MovieDetail() ) }
+    val labelsScrollState    = rememberScrollState()
 
     val refreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -100,25 +105,45 @@ fun MovieDetailComponent( movieId: Int ) {
         ) {
             if (errorMessage.isNotEmpty())
                 Text(text = "Error al obtener los datos: $errorMessage",
-                    Modifier.padding(15.dp)
+                    Modifier
+                        .padding(15.dp)
                         .background(Color(red = 0F, green = 0F, blue = 0F, alpha = 0.05F)),
                     textAlign = TextAlign.Center)
 
-            Text(text = "Movie ID: $movieId")
-            Text(text = "Nombre:     ${movieDetail.name}")
-            Text(text = "Estado actual:     ${movieDetail.status}")
+            Text(text = "Movie ID: $movieId", Modifier.padding(start = 15.dp))
+            Text(text = "Nombre:     ${movieDetail.name}", Modifier.padding(start = 15.dp))
+            Text(text = "Estado actual:     ${movieDetail.status}", Modifier.padding(start = 15.dp))
 
             if( movieDetail.budget > 0 )
-                Text(text = "Presupuesto:     ${movieDetail.budget} USD")
+                Text(text = "Presupuesto:     ${movieDetail.budget} USD", Modifier.padding(start = 15.dp))
 
             if( movieDetail.adult ) {
-                Row {
+                Row(Modifier.padding(start = 15.dp)) {
                     Text(stringResource(id = R.string.for_adults_advice))
                     Icon(imageVector = Icons.Filled.Block, contentDescription = "For adults")
                 }
             }
 
-            GlideImage(model = movieDetail.imageUrl, contentDescription = movieDetail.name)
+            if( movieDetail.imageUrl.isNotEmpty() )
+            GlideImage(
+                model = "https://image.tmdb.org/t/p/original/${movieDetail.imageUrl}",
+                contentDescription = movieDetail.name
+            )
+
+            Text(text = "Etiquetas: (${movieDetail.keywords.size})", Modifier.padding(start = 15.dp))
+
+
+            Row(Modifier.horizontalScroll( labelsScrollState )) {
+                movieDetail.keywords.forEach {
+                    Box(modifier = Modifier
+                        .padding(2.dp)
+                        .background(Color.LightGray)) {
+                        Icon(imageVector = Icons.Filled.Tag, contentDescription = it.word)
+                        Text(text = it.word, Modifier.padding(start = 25.dp, end = 5.dp))
+                    }
+                }
+            }
+
             PullRefreshIndicator(refreshing = isRefreshing, state = refreshState)
         }
     }

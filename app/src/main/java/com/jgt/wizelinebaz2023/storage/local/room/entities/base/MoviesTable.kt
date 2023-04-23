@@ -2,6 +2,7 @@ package com.jgt.wizelinebaz2023.storage.local.room.entities.base
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.jgt.wizelinebaz2023.domain.models.MovieDetail
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -29,4 +30,26 @@ data class MoviesTable(
     val releaseDate:      String,
     val voteAverage:      Float,
     val voteCount:        Int,
-)
+) {
+    fun toModel() = MovieDetail(
+        id               = id,
+        name             = title,
+        imageUrl         = "$posterPath",
+        releaseDate      = releaseDate,
+        status           = status,
+        budget           = budget,
+        adult            = adult,
+        homepage         = homepage,
+        overview         = overview,
+        popularity       = popularity,
+        revenue          = revenue,
+        runtime          = runtime,
+        video            = video,
+        imdbId           = imdbId,
+        backdropPath     = backdropPath,
+        originalLanguage = originalLanguage,
+        originalTitle    = originalTitle,
+        voteAverage      = voteAverage,
+        voteCount        = voteCount,
+    )
+}

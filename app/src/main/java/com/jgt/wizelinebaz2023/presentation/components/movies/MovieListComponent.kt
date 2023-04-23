@@ -135,20 +135,21 @@ fun MovieListComponent( category: String ) {
                             )
                         }
                     items(movieList.movies.count()) { movieIndex ->
-                        Box{
-                            movieList.movies.getOrNull(movieIndex)?.also { movie ->
+                        movieList.movies.getOrNull(movieIndex)?.also { movie ->
+                            Box(
+                                Modifier.clickable {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    viewModel.dispatch(
+                                        NavigationActions.NavigateToCompose(
+                                            "/movies/detail/${movie.id}"
+                                        )
+                                    )
+                                }
+                            ){
                                 Text(text = movie.name)
                                 GlideImage(
                                     model = "https://image.tmdb.org/t/p/original/${movie.imageUrl}",
                                     contentDescription = movie.name,
-                                    Modifier.clickable {
-                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                        viewModel.dispatch(
-                                            NavigationActions.NavigateToCompose(
-                                                "/movies/detail/${movie.id}"
-                                            )
-                                        )
-                                    }
                                 )
                             }
                         }

@@ -3,6 +3,9 @@ package com.jgt.wizelinebaz2023.storage.local.room.entities.relations
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
+import com.jgt.wizelinebaz2023.domain.models.MovieDetail
+import com.jgt.wizelinebaz2023.domain.models.MovieImages
+import com.jgt.wizelinebaz2023.domain.models.MovieKeyword
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.CategoriesTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.ImagesTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.KeywordsTable
@@ -39,4 +42,22 @@ data class MovieWithDetails(
         )
     )
     val categories: List<CategoriesTable>,
-)
+) {
+    fun toModel() = MovieDetail(
+        id          = movie.id,
+        name        = movie.title,
+        status      = movie.status,
+        imageUrl    = "${movie.posterPath}",
+        keywords    = keywords.map {
+            MovieKeyword(it.id, it.keyword)
+        },
+        images = MovieImages(
+            posters = images.filter{ it.isPoster == 1 }.map {
+               MovieImages.MovieImage(it.path, it.height, it.width, it.votes, it.voteAverage)
+            },
+            backdrops = images.filter{ it.isBackdrop == 1 }.map {
+                MovieImages.MovieImage(it.path, it.height, it.width, it.votes, it.voteAverage)
+            },
+        )
+    )
+}
