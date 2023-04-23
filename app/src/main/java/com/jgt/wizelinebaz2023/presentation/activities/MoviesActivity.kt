@@ -30,12 +30,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -113,7 +113,10 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
                                 Modifier
                                     .fillMaxWidth(fraction = .5F)
                                     .padding(10.dp)
-                            ) { Text(stringResource(id = R.string.movies_activity_logout_button)) }
+                            ) { Text(
+                                stringResource(id = R.string.movies_activity_logout_button),
+                                color = Color.White
+                            ) }
                         }
                     }
                 },
@@ -121,12 +124,9 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
                     BottomNavigation {
                         categories.forEach {item ->
                             BottomNavigationItem(
-                                icon = {
-                                    Icon(
-                                        item.value.second,
-                                        contentDescription = null)
-                                       },
-                                label = { Text(item.value.first) },
+                                icon = { Icon(item.value.second, tint = Color.White,
+                                            contentDescription = null)},
+                                label = { Text(item.value.first, color = Color.White) },
                                 selected = selectedItem == item.key,
                                 onClick = {
                                     selectedItem = item.key

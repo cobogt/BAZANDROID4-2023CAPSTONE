@@ -150,6 +150,10 @@ dependencies {
     // UTILIDADES PARA VIEWMODELS
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
 
+    // TESTING PARA COMPOSE
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.4.2'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest:1.4.2'
+
     // TESTING
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

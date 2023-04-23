@@ -4,6 +4,7 @@ import androidx.room.Query
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.RewriteQueriesToDropUnusedColumns
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.CategoriesTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.MoviesTable
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 12/04/23.
  * * * * * * * * * * **/
+@RewriteQueriesToDropUnusedColumns
 @Dao
 interface CategoriesDao {
     @Query("SELECT * FROM categories")
