@@ -24,10 +24,10 @@ data class MovieImagesResponse(
 
     fun toModel() = MovieImages(
         posters = posters.map {
-            MovieImages.MovieImage( it.filePath, it.height, it.width, it.voteCount, it.voteAverage )
+            MovieImages.MovieImage( id, it.filePath, it.height, it.width, it.voteCount, it.voteAverage )
         },
         backdrops = backdrops.map {
-            MovieImages.MovieImage( it.filePath, it.height, it.width, it.voteCount, it.voteAverage )
+            MovieImages.MovieImage( id, it.filePath, it.height, it.width, it.voteCount, it.voteAverage )
         }
     )
 }

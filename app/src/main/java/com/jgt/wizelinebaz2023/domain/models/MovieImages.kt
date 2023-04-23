@@ -11,6 +11,7 @@ data class MovieImages(
     val backdrops: List<MovieImage> = listOf(),
 ) {
     data class MovieImage(
+        val id:           Int,
         val path:         String,
         val height:       Int,
         val width:        Int,

@@ -2,6 +2,7 @@ package com.jgt.wizelinebaz2023.presentation.components.movies
 
 import android.app.Activity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +10,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Block
@@ -29,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -60,7 +64,9 @@ fun MovieDetailComponent( movieId: Int ) {
     var isRefreshing         by remember { mutableStateOf(false) }
     var runCoroutineInt      by remember { mutableStateOf( 0 ) }
     var movieDetail          by remember { mutableStateOf( MovieDetail() ) }
+    val detailScrollState    = rememberScrollState()
     val labelsScrollState    = rememberScrollState()
+
 
     val refreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -101,6 +107,7 @@ fun MovieDetailComponent( movieId: Int ) {
             Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
+                .verticalScroll(detailScrollState)
                 .pullRefresh(refreshState)
         ) {
             if (errorMessage.isNotEmpty())
@@ -110,9 +117,14 @@ fun MovieDetailComponent( movieId: Int ) {
                         .background(Color(red = 0F, green = 0F, blue = 0F, alpha = 0.05F)),
                     textAlign = TextAlign.Center)
 
-            Text(text = "Movie ID: $movieId", Modifier.padding(start = 15.dp))
-            Text(text = "Nombre:     ${movieDetail.name}", Modifier.padding(start = 15.dp))
-            Text(text = "Estado actual:     ${movieDetail.status}", Modifier.padding(start = 15.dp))
+            Text(text = "Movie ID: $movieId",
+                Modifier.padding(start = 15.dp))
+            Text(text = "Nombre: ${movieDetail.name}",
+                Modifier.padding(start = 15.dp))
+            Text(text = "Estado actual: ${movieDetail.status}",
+                Modifier.padding(start = 15.dp))
+            Text(text = "Año de lanzamiento: ${movieDetail.releaseDate}",
+                Modifier.padding(start = 15.dp))
 
             if( movieDetail.budget > 0 )
                 Text(text = "Presupuesto:     ${movieDetail.budget} USD", Modifier.padding(start = 15.dp))
@@ -124,14 +136,51 @@ fun MovieDetailComponent( movieId: Int ) {
                 }
             }
 
-            if( movieDetail.imageUrl.isNotEmpty() )
-            GlideImage(
-                model = "https://image.tmdb.org/t/p/original/${movieDetail.imageUrl}",
-                contentDescription = movieDetail.name
-            )
+            Text("Posters: ${movieDetail.images.posters.size}",
+                Modifier.padding(start = 15.dp))
+
+
+            LazyRow(Modifier.fillMaxWidth()) {
+                if( movieDetail.imageUrl.isNotEmpty() )
+                    item {
+                        Box(modifier = Modifier
+                            .fillParentMaxHeight()
+                            .fillParentMaxWidth()) {
+                            GlideImage(
+                                model = "https://image.tmdb.org/t/p/original/${movieDetail.imageUrl}",
+                                contentDescription = movieDetail.name
+                            )
+                        }
+                    }
+                items(movieDetail.images.posters.size) {
+                    movieDetail.images.posters.forEach {
+                        Box(modifier = Modifier
+                            .fillParentMaxHeight()
+                            .fillParentMaxWidth()) {
+                            GlideImage(
+                                model = "https://image.tmdb.org/t/p/original/${it.path}",
+                                contentDescription = movieDetail.name,
+                                contentScale = ContentScale.Fit,
+                            )
+                        }
+                    }
+                }
+                items(movieDetail.images.backdrops.size) {
+                    movieDetail.images.backdrops.forEach {
+                        Box(modifier = Modifier
+                            .fillParentMaxHeight()
+                            .fillParentMaxWidth()) {
+                            GlideImage(
+                                model = "https://image.tmdb.org/t/p/original/${it.path}",
+                                contentDescription = movieDetail.name,
+                                contentScale = ContentScale.Fit,
+                            )
+                        }
+                    }
+                }
+            }
 
             Text(text = "Etiquetas: (${movieDetail.keywords.size})", Modifier.padding(start = 15.dp))
-
 
             Row(Modifier.horizontalScroll( labelsScrollState )) {
                 movieDetail.keywords.forEach {
@@ -140,6 +189,25 @@ fun MovieDetailComponent( movieId: Int ) {
                         .background(Color.LightGray)) {
                         Icon(imageVector = Icons.Filled.Tag, contentDescription = it.word)
                         Text(text = it.word, Modifier.padding(start = 25.dp, end = 5.dp))
+                    }
+                }
+            }
+
+            Text("Backdrops: ${movieDetail.images.backdrops.size}",
+                Modifier.padding(start = 15.dp, top = 25.dp))
+
+            LazyRow(Modifier.fillMaxWidth()) {
+                items(movieDetail.images.backdrops.size) {
+                    movieDetail.images.backdrops.forEach {
+                        Box(modifier = Modifier
+                            .fillParentMaxHeight()
+                            .fillParentMaxWidth()) {
+                            GlideImage(
+                                model = "https://image.tmdb.org/t/p/original/${it.path}",
+                                contentDescription = movieDetail.name,
+                                contentScale = ContentScale.Fit,
+                            )
+                        }
                     }
                 }
             }

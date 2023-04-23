@@ -53,10 +53,10 @@ data class MovieWithDetails(
         },
         images = MovieImages(
             posters = images.filter{ it.isPoster == 1 }.map {
-               MovieImages.MovieImage(it.path, it.height, it.width, it.votes, it.voteAverage)
+               MovieImages.MovieImage(it.id, it.path, it.height, it.width, it.votes, it.voteAverage)
             },
             backdrops = images.filter{ it.isBackdrop == 1 }.map {
-                MovieImages.MovieImage(it.path, it.height, it.width, it.votes, it.voteAverage)
+                MovieImages.MovieImage(it.id, it.path, it.height, it.width, it.votes, it.voteAverage)
             },
         )
     )

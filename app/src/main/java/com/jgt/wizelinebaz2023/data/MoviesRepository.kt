@@ -74,7 +74,12 @@ class MoviesRepository @Inject constructor( moviesDatabase: MoviesDatabase ){
         RepositoryStrategy.FetchAndTransformStrategy(
             remoteSourceData = { moviesApiClient.doGetMovieImagesRequest( movieId ) },
             remoteToModelTransform = { it.toModel() },
-            storeModelTransformation = { imagesDao.insertAll( it.toEntity( movieId ) ) }
+            storeModelTransformation = {
+                imagesDao.deleteAll(
+                    imagesDao.getAll( movieId )
+                )
+                imagesDao.insertAll( it.toEntity( movieId ) )
+            }
         )
 
     private fun getMovieKeywordsById( movieId: Int ) =
