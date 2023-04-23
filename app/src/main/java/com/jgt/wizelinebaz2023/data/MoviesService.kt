@@ -27,18 +27,8 @@ interface MoviesService {
         @Path("movie_id") movieId: Int
     ): MovieKeywordsResponse
 
-    @GET("/3/movie/latest")
-    suspend fun doGetLatestMoviesRequest(): CategoryMovieListResponse
-
-    @GET("/3/movie/popular")
-    suspend fun doGetPopularMoviesRequest(): CategoryMovieListResponse
-
-    @GET("/3/movie/upcoming")
-    suspend fun doGetUpcomingMoviesRequest(): CategoryMovieListResponse
-
-    @GET("/3/movie/top_rated")
-    suspend fun doGetTopRatedMoviesRequest(): CategoryMovieListResponse
-
-    @GET("/3/movie/now_playing")
-    suspend fun doGetNowPlayingMoviesRequest(): CategoryMovieListResponse
+    @GET("/3/movie/{category}")
+    suspend fun doGetMoviesByCategoryRequest(
+        @Path("category") category: String
+    ): CategoryMovieListResponse
 }

@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -39,6 +40,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.jgt.wizelinebaz2023.R
 import com.jgt.wizelinebaz2023.core.AppStateStore
 import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
 import com.jgt.wizelinebaz2023.core.mvi.navigationCatalog.NavigationCatalog
@@ -110,10 +112,7 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
                                 Modifier
                                     .fillMaxWidth(fraction = .5F)
                                     .padding(10.dp)
-
-                            ) {
-                                Text("Cerrar sesión")
-                            }
+                            ) { Text(stringResource(id = R.string.movies_activity_logout_button)) }
                         }
                     }
                 },
@@ -141,24 +140,24 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
                     }
                 }
             ) { innerPadding ->
-
                 NavHost(
                     navController = navController,
                     startDestination = "/list/upcoming",
                     modifier = Modifier.padding(innerPadding)
                 ) {
-                    composable("/list/upcoming")  { MovieListComponent("upcoming") }
-                    composable("/list/top_rated") { MovieListComponent("top_rated") }
-                    composable("/list/popular")   { MovieListComponent("popular") }
+                    composable("/list/upcoming")  {MovieListComponent("upcoming")}
+                    composable("/list/top_rated") {MovieListComponent("top_rated")}
+                    composable("/list/popular")   {MovieListComponent("popular")}
                     composable(
                         route = "/movies/detail/{movieId}",
                         arguments = listOf( navArgument("movieId") {
-                            type = NavType.IntType
+                            type         = NavType.IntType
                             defaultValue = 0
                         })
                     ) { backStackEntry ->
-                        val movieId = backStackEntry.arguments?.getInt( "movieId" ) ?: 0
-                        MovieDetailComponent(movieId = movieId)
+                        MovieDetailComponent(
+                            movieId = backStackEntry.arguments?.getInt( "movieId" ) ?: 0
+                        )
                     }
                 }
 

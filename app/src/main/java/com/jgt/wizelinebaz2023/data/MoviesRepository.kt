@@ -1,8 +1,5 @@
 package com.jgt.wizelinebaz2023.data
 
-import android.util.Log
-import com.jgt.wizelinebaz2023.domain.models.MovieDetail
-import com.jgt.wizelinebaz2023.domain.models.MovieList
 import com.jgt.wizelinebaz2023.storage.RepositoryStrategy
 import com.jgt.wizelinebaz2023.storage.local.room.MoviesDatabase
 import com.jgt.wizelinebaz2023.storage.remote.ApiClient
@@ -19,25 +16,11 @@ class MoviesRepository @Inject constructor( moviesDatabase: MoviesDatabase ){
 
     fun getMovieListByCategory( category: String ) =
         RepositoryStrategy.FetchAndTransformStrategy(
-            remoteSourceData = {
-                when( category ) {
-                    "upcoming"   -> moviesApiClient.doGetUpcomingMoviesRequest()
-                    "top_rated"  -> moviesApiClient.doGetTopRatedMoviesRequest()
-                    "popular"    -> moviesApiClient.doGetPopularMoviesRequest()
-                    else         -> moviesApiClient.doGetUpcomingMoviesRequest()
-                }
+            remoteSourceData = { moviesApiClient.doGetMoviesByCategoryRequest(
+                category = listOf("upcoming", "top_rated", "popular")
+                    .firstOrNull { it == category } ?: "upcoming" )
             },
-            remoteToModelTransform = {
-                Log.w("MoviesRepository", it.toString())
-                MovieList(
-                    it.page,
-                    it.results.map { mli ->
-                        MovieDetail(
-                            mli.id,
-                            mli.title,
-                            "${mli.posterPath}" )
-                    })
-            },
+            remoteToModelTransform = { it.toModel() },
         )
 
     fun getMovieDetailById( movieId: Int ) =
@@ -45,14 +28,4 @@ class MoviesRepository @Inject constructor( moviesDatabase: MoviesDatabase ){
             remoteSourceData = { moviesApiClient.doGetMovieDetailsRequest( movieId ) },
             remoteToModelTransform = { it.toModel() }
         )
-
-    /*fun getMovieListByCategoryRoom( category: String ) =
-        RepositoryStrategy.FetchTransformAndStoreStrategy<
-                CategoryMovieListResponse, MovieList, MoviesCategoriesCrossRef>(
-            remoteSourceData = {},
-            localSourceData = {},
-            localToModelTransform = {},
-            remoteToModelTransform = {},
-            storeRemoteResult = {}
-        )*/
 }

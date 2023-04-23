@@ -1,6 +1,8 @@
 package com.jgt.wizelinebaz2023.data.dto
 
 import com.google.gson.annotations.SerializedName
+import com.jgt.wizelinebaz2023.domain.models.MovieDetail
+import com.jgt.wizelinebaz2023.domain.models.MovieList
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -34,4 +36,13 @@ data class CategoryMovieListResponse(
         @SerializedName("vote_count")        val voteCount:        Int,
         @SerializedName("vote_average")      val voteAverage:      Float,
     )
+
+    fun toModel() = MovieList(
+        page = page,
+        movies = results.map { mli ->
+            MovieDetail(
+                mli.id,
+                mli.title,
+                "${mli.posterPath}" )
+        })
 }

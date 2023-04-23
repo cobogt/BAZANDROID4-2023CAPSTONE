@@ -1,6 +1,5 @@
 package com.jgt.wizelinebaz2023.storage.remote.interceptors
 
-import android.util.Log
 import com.jgt.wizelinebaz2023.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
