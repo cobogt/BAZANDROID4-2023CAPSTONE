@@ -15,7 +15,7 @@ data class MovieDetailResponse(
                                             val homepage:             String? = null,
                                             val overview:             String? = null,
                                             val popularity:           Float,
-                                            val revenue:              Int,
+                                            val revenue:              Float,
                                             val runtime:              Int? = null,
                                             val status:               String,
                                             val tagline:              String? = null,

@@ -18,7 +18,7 @@ data class MovieDetail(
     val homepage:         String? = null,
     val overview:         String? = null,
     val popularity:       Float   = 0F,
-    val revenue:          Int     = 0,
+    val revenue:          Float   = 0F,
     val runtime:          Int?    = null,
     val video:            Boolean = false,
     val imdbId:           String? = null,

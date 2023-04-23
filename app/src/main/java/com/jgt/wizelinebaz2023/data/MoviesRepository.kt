@@ -82,7 +82,7 @@ class MoviesRepository @Inject constructor( moviesDatabase: MoviesDatabase ){
             remoteSourceData = { moviesApiClient.doGetMovieKeywords( movieId ) },
             remoteToModelTransform = { it.toModel() },
             storeModelTransformation = { keywordsDao.insertKeywords(
-                it.map { kw -> KeywordsTable( movieId = movieId, keyword = kw.word ) }
+                it.map { kw -> KeywordsTable( id = kw.id, movieId = movieId, keyword = kw.word ) }
             ) }
         )
 }
