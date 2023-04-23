@@ -13,8 +13,6 @@ import com.jgt.wizelinebaz2023.storage.local.room.entities.base.ImagesTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.KeywordsTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.MoviesTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.crossref.MoviesCategoriesCrossRef
-import com.jgt.wizelinebaz2023.storage.local.room.entities.crossref.MoviesImagesCrossRef
-import com.jgt.wizelinebaz2023.storage.local.room.entities.crossref.MoviesKeywordsCrossRef
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,8 +34,6 @@ import javax.inject.Singleton
 
         // Entidades de tablas pivote
         MoviesCategoriesCrossRef::class,
-        MoviesImagesCrossRef::class,
-        MoviesKeywordsCrossRef::class,
 
         // Entidades con relaciones finales
         // MovieWithDetails::class

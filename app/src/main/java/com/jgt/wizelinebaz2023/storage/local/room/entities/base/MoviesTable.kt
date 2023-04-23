@@ -15,7 +15,7 @@ data class MoviesTable(
     val budget:           Int,
     val homepage:         String? = null,
     val overview:         String? = null,
-    val popularity:       Int,
+    val popularity:       Float,
     val revenue:          Int,
     val runtime:          Int? = null,
     val status:           String,
@@ -27,6 +27,6 @@ data class MoviesTable(
     val originalTitle:    String,
     val posterPath:       String? = null,
     val releaseDate:      String,
-    val voteAverage:      Int,
+    val voteAverage:      Float,
     val voteCount:        Int,
 )

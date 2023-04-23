@@ -12,5 +12,5 @@ import com.jgt.wizelinebaz2023.storage.local.room.entities.base.ImagesTable
 @Dao
 interface ImagesDao {
     @Insert( onConflict = OnConflictStrategy.REPLACE )
-    fun insert( image: ImagesTable)
+    suspend fun insertAll( image: List<ImagesTable> )
 }

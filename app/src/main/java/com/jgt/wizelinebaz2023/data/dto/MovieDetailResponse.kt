@@ -2,6 +2,7 @@ package com.jgt.wizelinebaz2023.data.dto
 
 import com.google.gson.annotations.SerializedName
 import com.jgt.wizelinebaz2023.domain.models.MovieDetail
+import com.jgt.wizelinebaz2023.storage.local.room.entities.base.MoviesTable
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT

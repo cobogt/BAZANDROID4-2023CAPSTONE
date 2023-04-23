@@ -10,8 +10,8 @@ import androidx.room.Index
 @Entity(tableName = "movies_categories",
     primaryKeys = ["movieId", "categoryId"],
     indices = [
-        Index("movieId", unique = true),
-        Index("categoryId", unique = true)
+        Index("movieId", unique = false),
+        Index("categoryId", unique = false)
     ]
 )
 data class MoviesCategoriesCrossRef(

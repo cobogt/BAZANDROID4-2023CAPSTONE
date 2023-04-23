@@ -9,7 +9,8 @@ import androidx.room.PrimaryKey
  * * * * * * * * * * **/
 @Entity("keywords")
 data class KeywordsTable(
-    @PrimaryKey
-    val id:      Int,
+    @PrimaryKey( autoGenerate = true )
+    val id:      Int = 0,
+    val movieId: Int,
     val keyword: String,
 )

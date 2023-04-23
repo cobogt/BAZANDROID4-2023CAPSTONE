@@ -27,6 +27,6 @@ interface CategoriesDao {
         "WHERE categories.name = :categoryName")
     fun getMoviesFromCategory( categoryName: String ): Flow<List<MoviesTable>>
 
-    @Insert( onConflict = OnConflictStrategy.REPLACE )
-    suspend fun updateCategories( categories: List<CategoriesTable> )
+    @Insert( onConflict = OnConflictStrategy.IGNORE )
+    suspend fun insert( category: CategoriesTable ): Long
 }

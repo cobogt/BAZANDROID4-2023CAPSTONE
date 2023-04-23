@@ -8,8 +8,6 @@ import com.jgt.wizelinebaz2023.storage.local.room.entities.base.ImagesTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.KeywordsTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.MoviesTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.crossref.MoviesCategoriesCrossRef
-import com.jgt.wizelinebaz2023.storage.local.room.entities.crossref.MoviesImagesCrossRef
-import com.jgt.wizelinebaz2023.storage.local.room.entities.crossref.MoviesKeywordsCrossRef
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -22,13 +20,15 @@ data class MovieWithDetails(
 
     @Relation(
         parentColumn = "id",
-        entityColumn = "id",
-        associateBy = Junction( MoviesImagesCrossRef::class,
-            parentColumn = "movieId",
-            entityColumn = "imageId"
-        )
+        entityColumn = "movieId",
     )
     val images: List<ImagesTable>,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "movieId",
+    )
+    val keywords: List<KeywordsTable>,
 
     @Relation(
         parentColumn = "id",
@@ -39,14 +39,4 @@ data class MovieWithDetails(
         )
     )
     val categories: List<CategoriesTable>,
-
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "id",
-        associateBy = Junction( MoviesKeywordsCrossRef::class,
-            parentColumn = "movieId",
-            entityColumn = "keywordId"
-        )
-    )
-    val keywords: List<KeywordsTable>,
 )

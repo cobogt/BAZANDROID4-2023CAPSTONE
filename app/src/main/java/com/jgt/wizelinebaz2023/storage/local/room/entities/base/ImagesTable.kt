@@ -1,6 +1,5 @@
 package com.jgt.wizelinebaz2023.storage.local.room.entities.base
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -10,13 +9,14 @@ import androidx.room.PrimaryKey
  * * * * * * * * * * **/
 @Entity("images")
 data class ImagesTable(
-    @PrimaryKey
-    val id:                                             Int,
-    val height:                                         Int,
-    val width:                                          Int,
-    @ColumnInfo("aspect_ratio") val aspectRatio: Int,
-    @ColumnInfo("file_path")    val filePath:    String,
-    @ColumnInfo("iso_639_1")    val iso639i:     String? = null,
-    @ColumnInfo("vote_average") val voteAverage: Int,
-    @ColumnInfo("vote_count")   val voteCount:   Int,
+    @PrimaryKey( autoGenerate = true )
+    val id:          Int = 0,
+    val movieId:     Int,
+    val isPoster:    Int = 0,
+    val isBackdrop:  Int = 0,
+    val height:      Int,
+    val width:       Int,
+    val path:        String,
+    val voteAverage: Float,
+    val votes:       Int,
 )
