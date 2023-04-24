@@ -2,7 +2,6 @@ package com.jgt.wizelinebaz2023.presentation.components.movies
 
 import android.app.Activity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -97,6 +96,10 @@ fun MovieDetailComponent( movieId: Int ) {
                         is Resource.Error   -> errorMessage = "${movieResource.exception.message}"
                         is Resource.Loading -> isRefreshing = true
                         is Resource.Success -> movieDetail  = movieResource.data ?: MovieDetail()
+                        is Resource.Cache   -> {
+                            errorMessage = "${movieResource.exception.message}"
+                            movieDetail  = movieResource.data ?: MovieDetail()
+                        }
                     }
                 }
         }

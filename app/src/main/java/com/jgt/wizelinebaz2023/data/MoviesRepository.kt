@@ -1,7 +1,5 @@
 package com.jgt.wizelinebaz2023.data
 
-import com.jgt.wizelinebaz2023.data.dto.CategoryMovieListResponse
-import com.jgt.wizelinebaz2023.data.dto.MovieDetailResponse
 import com.jgt.wizelinebaz2023.domain.models.MovieDetail
 import com.jgt.wizelinebaz2023.domain.models.MovieList
 import com.jgt.wizelinebaz2023.storage.RepositoryStrategy
@@ -10,7 +8,6 @@ import com.jgt.wizelinebaz2023.storage.local.room.entities.base.CategoriesTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.KeywordsTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.base.MoviesTable
 import com.jgt.wizelinebaz2023.storage.local.room.entities.crossref.MoviesCategoriesCrossRef
-import com.jgt.wizelinebaz2023.storage.local.room.entities.relations.MovieWithDetails
 import com.jgt.wizelinebaz2023.storage.remote.ApiClient
 import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
@@ -29,9 +26,7 @@ class MoviesRepository @Inject constructor( moviesDatabase: MoviesDatabase ){
     private val categoriesDao   = moviesDatabase.categoriesDao()
 
     fun getMovieListByCategory( category: String ) =
-        RepositoryStrategy.FetchTransformAndStoreStrategy<
-                CategoryMovieListResponse, List<MoviesTable>, MovieList
-        >(
+        RepositoryStrategy.FetchTransformAndStoreStrategy (
             remoteSourceData = { moviesApiClient.doGetMoviesByCategoryRequest(
                 category = listOf("upcoming", "top_rated", "popular")
                     .firstOrNull { it == category } ?: "upcoming" )
@@ -56,8 +51,7 @@ class MoviesRepository @Inject constructor( moviesDatabase: MoviesDatabase ){
         )
 
     fun getMovieDetailById( movieId: Int ) =
-        RepositoryStrategy.FetchTransformAndStoreStrategy<
-                MovieDetailResponse, MovieWithDetails, MovieDetail>(
+        RepositoryStrategy.FetchTransformAndStoreStrategy (
             remoteSourceData = { moviesApiClient.doGetMovieDetailsRequest( movieId ) },
             remoteToModelTransform = { it.toModel() },
             storeModelTransformation = { movieModel: MovieDetail ->
@@ -75,9 +69,7 @@ class MoviesRepository @Inject constructor( moviesDatabase: MoviesDatabase ){
             remoteSourceData = { moviesApiClient.doGetMovieImagesRequest( movieId ) },
             remoteToModelTransform = { it.toModel() },
             storeModelTransformation = {
-                imagesDao.deleteAll(
-                    imagesDao.getAll( movieId )
-                )
+                imagesDao.deleteAll( imagesDao.getAll( movieId ) )
                 imagesDao.insertAll( it.toEntity( movieId ) )
             }
         )

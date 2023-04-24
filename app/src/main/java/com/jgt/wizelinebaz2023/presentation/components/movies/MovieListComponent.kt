@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -93,6 +94,10 @@ fun MovieListComponent( category: String ) {
                         is Resource.Error   -> errorMessage = "${moviesResource.exception.message}"
                         is Resource.Loading -> isRefreshing = true
                         is Resource.Success -> movieList    = moviesResource.data ?: MovieList()
+                        is Resource.Cache   -> {
+                            movieList    = moviesResource.data ?: MovieList()
+                            errorMessage = "${moviesResource.exception.message}"
+                        }
                     }
                 }
         }
@@ -106,8 +111,9 @@ fun MovieListComponent( category: String ) {
         ) {
             if (errorMessage.isNotEmpty())
                 Text(text = "Error al obtener los datos: $errorMessage",
-                    Modifier.padding(15.dp)
-                        .background(Color(red =0F, green =0F, blue =0F, alpha = 0.05F)),
+                    Modifier
+                        .padding(15.dp)
+                        .background(Color(red = 0F, green = 0F, blue = 0F, alpha = 0.05F)),
                     textAlign = TextAlign.Center)
 
             Box(
@@ -150,6 +156,7 @@ fun MovieListComponent( category: String ) {
                                 GlideImage(
                                     model = "https://image.tmdb.org/t/p/original/${movie.imageUrl}",
                                     contentDescription = movie.name,
+                                    contentScale = ContentScale.Fit,
                                 )
                             }
                         }
