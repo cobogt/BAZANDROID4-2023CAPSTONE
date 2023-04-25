@@ -72,7 +72,7 @@ fun MovieListComponent( category: String ) {
                 try { moviesRepository.fetch() }
                 catch (e: Exception) {
                     errorMessage = "${e.message}"
-                    isRefreshing   = false
+                    isRefreshing = false
                 }
 
                 runCoroutineInt += 1
