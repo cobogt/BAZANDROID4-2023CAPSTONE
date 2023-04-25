@@ -18,6 +18,12 @@ import com.jgt.wizelinebaz2023.core.sharedActions.NavigationActions
 object NavigationController: Application.ActivityLifecycleCallbacks {
     private var currentActivity: Activity? = null
 
+    fun getCurrentActivityName(): String? = currentActivity?.javaClass?.canonicalName
+
+    fun finishCurrentActivity() {
+        currentActivity?.finish()
+    }
+
     fun navigateToActivity(
         className: String,
         params: Map<String, String> = mapOf()

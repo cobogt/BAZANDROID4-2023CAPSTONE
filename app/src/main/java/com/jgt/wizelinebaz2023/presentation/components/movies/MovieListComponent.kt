@@ -38,9 +38,11 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
+import com.jgt.wizelinebaz2023.core.mvi.gatesCatalog.CheckInternetGate
 import com.jgt.wizelinebaz2023.core.sharedActions.NavigationActions
 import com.jgt.wizelinebaz2023.domain.MoviesViewModel
 import com.jgt.wizelinebaz2023.domain.models.MovieList
+import com.jgt.wizelinebaz2023.presentation.actions.RefreshRepositoryActions
 import com.jgt.wizelinebaz2023.storage.Resource
 import kotlinx.coroutines.launch
 
@@ -68,21 +70,31 @@ fun MovieListComponent( category: String ) {
     val refreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = {
-            coroutineScope.launch {
-                try { moviesRepository.fetch() }
-                catch (e: Exception) {
-                    errorMessage = "${e.message}"
-                    isRefreshing = false
+            viewModel.dispatch(
+                RefreshRepositoryActions.RefreshMovieList.apply {
+                    gate = CheckInternetGate
                 }
-
-                runCoroutineInt += 1
-            }
+            )
+            runCoroutineInt += 1
         },
         refreshThreshold = 50.dp,
         refreshingOffset = 50.dp
     )
 
     LaunchedEffect(key1 = runCoroutineInt) {
+        coroutineScope.launch {
+            viewModel.currenAction.collect {
+                if (it is RefreshRepositoryActions.RefreshMovieList) {
+                    try {
+                        moviesRepository.fetch()
+                    } catch (e: Exception) {
+                        errorMessage = "${e.message}"
+                        isRefreshing = false
+                    }
+                }
+            }
+        }
+
         coroutineScope.launch {
             moviesRepository
                 .consumeAsResource()

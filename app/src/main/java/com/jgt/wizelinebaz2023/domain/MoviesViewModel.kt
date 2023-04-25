@@ -2,6 +2,7 @@ package com.jgt.wizelinebaz2023.domain
 
 import androidx.lifecycle.ViewModel
 import com.jgt.wizelinebaz2023.core.AppStateStore
+import com.jgt.wizelinebaz2023.core.gates.GatesMiddleware
 import com.jgt.wizelinebaz2023.core.mvi.Action
 import com.jgt.wizelinebaz2023.core.mvi.Middleware
 import com.jgt.wizelinebaz2023.core.mvi.Store
@@ -23,6 +24,7 @@ class MoviesViewModel @Inject constructor(
 ): Store, ViewModel() {
     override val middlewareList: List<Middleware> = listOf(
         FirebaseAuthMiddleware( this ),
+        GatesMiddleware( this )
     )
 
     fun getMoviesByCategory( category: String ) =

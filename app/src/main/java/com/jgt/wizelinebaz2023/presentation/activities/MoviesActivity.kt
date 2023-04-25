@@ -43,12 +43,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.jgt.wizelinebaz2023.R
 import com.jgt.wizelinebaz2023.core.AppStateStore
+import com.jgt.wizelinebaz2023.core.mvi.Action
 import com.jgt.wizelinebaz2023.core.mvi.ActivityWithViewModelStoreInterface
+import com.jgt.wizelinebaz2023.core.mvi.gatesCatalog.CheckInternetGate
 import com.jgt.wizelinebaz2023.core.mvi.navigationCatalog.NavigationCatalog
 import com.jgt.wizelinebaz2023.core.sharedActions.NavigationActions
 import com.jgt.wizelinebaz2023.core.sharedActions.UserActions
 import com.jgt.wizelinebaz2023.core.sharedStates.UserState
 import com.jgt.wizelinebaz2023.domain.MoviesViewModel
+import com.jgt.wizelinebaz2023.presentation.components.movies.CheckConnectionComponent
 import com.jgt.wizelinebaz2023.presentation.components.movies.MovieDetailComponent
 import com.jgt.wizelinebaz2023.presentation.components.movies.MovieListComponent
 import dagger.hilt.android.AndroidEntryPoint
@@ -146,6 +149,7 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
                     startDestination = "/list/upcoming",
                     modifier = Modifier.padding(innerPadding)
                 ) {
+                    composable("/no_network")     {CheckConnectionComponent()}
                     composable("/list/upcoming")  {MovieListComponent("upcoming")}
                     composable("/list/top_rated") {MovieListComponent("top_rated")}
                     composable("/list/popular")   {MovieListComponent("popular")}
@@ -167,6 +171,9 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
                         viewModelStateStore.currenAction.collect {
                             if( it is NavigationActions.NavigateToCompose )
                                 navController.navigate( it.composePath )
+
+                            if( it is NavigationActions.Back )
+                                navController.popBackStack()
                         }
                     }
                 }

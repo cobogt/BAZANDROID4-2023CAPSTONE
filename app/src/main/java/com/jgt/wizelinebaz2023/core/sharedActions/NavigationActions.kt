@@ -15,4 +15,6 @@ sealed class NavigationActions: Action() {
     data class NavigateToCompose(
         val composePath: String
     ): NavigationActions()
+
+    object Back: NavigationActions()
 }

@@ -22,8 +22,6 @@ data class NavigationMiddleware(
                     action.activityClassName,
                     mapOf( "path" to (action.composePath ?: "/") )
                 )
-
-                // is NavigationActions.NavigateToCompose -> controller.navigateToCompose( action.composePath )
         }
 
         return action
