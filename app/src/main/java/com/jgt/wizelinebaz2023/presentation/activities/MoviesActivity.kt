@@ -189,4 +189,9 @@ class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
             )
         }
     }
+
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        viewModelStateStore.dispatch( NavigationActions.Back )
+    }
 }
