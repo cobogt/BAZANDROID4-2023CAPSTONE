@@ -1,0 +1,71 @@
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load( new FileInputStream(keystorePropertiesFile) )
+
+android {
+    compileSdk 33
+    // compileSdkVersion "android-UpsideDownCake" // Usar con Android 14
+
+    defaultConfig {
+        minSdk 29
+        targetSdk 33
+        // targetSdkVersion "android-UpsideDownCake" // Usar con Android 14
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+    }
+
+    signingConfigs {
+        config {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
+    def localProperties = new Properties()
+    localProperties.load( new FileInputStream(rootProject.file("keystore.properties")) )
+
+    buildTypes {
+        debug {
+            buildConfigField("String", "API_KEY", "\"" + localProperties['MOVIEDB_API_KEY'] + "\"")
+            buildConfigField("String", "LOCALE", "\"" + localProperties['MOVIEDB_LOCALE'] + "\"")
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures { compose true }
+
+    kotlinOptions { jvmTarget = 17 }
+
+    composeOptions { kotlinCompilerExtensionVersion = "1.4.3" }
+
+    hilt { enableAggregatingTask = true }
+}
+
+detekt {
+    toolVersion = "1.23.0-RC1"
+    config = files("config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
+}
+
+kapt {
+    correctErrorTypes true
+}

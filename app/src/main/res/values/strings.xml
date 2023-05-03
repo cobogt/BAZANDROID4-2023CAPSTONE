@@ -1,11 +1,3 @@
 <resources>
     <string name="app_name">WLBaz2023JGT</string>
-    <string name="login_component_button_login">Iniciar sesión</string>
-    <string name="login_component_label_signup">Registrarse como nuevo usuario</string>
-    <string name="login_component_label_header">Iniciar sesión</string>
-    <string name="signup_component_label_header">Nuevo usuario</string>
-    <string name="signup_component_button_signup">Registrarse</string>
-    <string name="signup_component_label_login">Iniciar sesión</string>
-    <string name="for_adults_advice">Película para adultos</string>
-    <string name="movies_activity_logout_button">Cerrar sesión</string>
 </resources>

@@ -1,0 +1,45 @@
+dependencies {
+    // HILT
+    implementation "com.google.dagger:hilt-android:2.45"
+    kapt "com.google.dagger:hilt-compiler:2.45"
+
+    // CORE
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.collection:collection-ktx:1.2.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    implementation 'androidx.navigation:navigation-runtime:2.5.3'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.activity:activity-ktx:1.7.1' // Actualizar hasta que salga Android 14
+
+    // FIREBASE
+    implementation platform('com.google.firebase:firebase-bom:31.4.0')
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.2'
+    implementation 'com.google.firebase:firebase-config'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-common-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
+    // SERVICIOS DE GOOGLE
+    implementation 'com.google.gms:google-services:4.3.15'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.2'
+
+    // OKHTTP
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+    testImplementation('com.squareup.okhttp3:mockwebserver:4.10.0')
+
+    // RETROFIT
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // TESTING
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'io.mockk:mockk:1.12.2'
+    testImplementation 'app.cash.turbine:turbine:0.12.3'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // GSON: Converter HTTP y parser de Json
+    implementation 'com.google.code.gson:gson:2.10'
+}

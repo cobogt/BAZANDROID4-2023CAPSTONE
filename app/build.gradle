@@ -1,30 +1,22 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.gms.google-services'
-    id 'com.google.protobuf'
-    id 'com.google.devtools.ksp'
     id 'io.gitlab.arturbosch.detekt'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
 }
 
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load( new FileInputStream(keystorePropertiesFile) )
+apply from: "$rootDir.path/gradlePresets/buildConfig.gradle"
 
 android {
     namespace 'com.jgt.wizelinebaz2023'
+
     compileSdk 33
-    // compileSdkVersion "android-UpsideDownCake" // Usar con Android 14
 
     defaultConfig {
-        applicationId "com.jgt.wizelinebaz2023"
         minSdk 29
         targetSdk 33
-        // targetSdkVersion "android-UpsideDownCake" // Usar con Android 14
-        versionCode 1
-        versionName "1.0"
+        applicationId "com.jgt.wizelinebaz2023"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -34,154 +26,12 @@ android {
             }
         }
     }
-
-    signingConfigs {
-        config {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-        }
-    }
-
-    def localProperties = new Properties()
-    localProperties.load( new FileInputStream(rootProject.file("keystore.properties")) )
-
-    buildTypes {
-        debug {
-            buildConfigField("String", "API_KEY", "\"" + localProperties['MOVIEDB_API_KEY'] + "\"")
-        }
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    buildFeatures { compose true }
-
-    kotlinOptions { jvmTarget = 17 }
-
-    composeOptions { kotlinCompilerExtensionVersion = "1.4.3" }
-
-    hilt { enableAggregatingTask = true }
 }
 
-protobuf {
-    protoc { artifact = "com.google.protobuf:protoc:3.10.0" }
-
-    generateProtoTasks {
-        all().each { task ->
-            task.builtins {
-                java { option 'lite' }
-            }
-        }
-    }
-}
-
-detekt {
-    toolVersion = "1.23.0-RC1"
-    config = files("config/detekt/detekt.yml")
-    buildUponDefaultConfig = true
-}
-
-kapt {
-    correctErrorTypes true
-}
+apply from: "$rootDir.path/gradlePresets/coreDependencies.gradle"
+apply from: "$rootDir.path/gradlePresets/contentDependencies.gradle"
 
 dependencies {
-    def composeBom = platform('androidx.compose:compose-bom:2023.01.00')
-    implementation composeBom
-    androidTestImplementation composeBom
-
-    // CORE
-    implementation 'androidx.core:core-ktx:1.10.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.collection:collection-ktx:1.2.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.navigation:navigation-runtime:2.5.3'
-    implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.activity:activity-ktx:1.7.1' // Actualizar hasta que salga Android 14
-
-    // HILT
-    implementation "com.google.dagger:hilt-android:2.45"
-    kapt "com.google.dagger:hilt-compiler:2.45"
-
-    // ROOM
-    def room_version = '2.5.1'
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
-
-    implementation "androidx.room:room-ktx:$room_version"
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-
-    // DATASTORE: Reemplazo de SharedPreferences
-    implementation 'androidx.datastore:datastore-core:1.0.0'
-    implementation 'androidx.datastore:datastore-preferences:1.0.0'
-
-    // PROTOBUF: Parser de archivos .proto a clases Java, necesario para Datastore
-    implementation 'com.google.protobuf:protobuf-javalite:3.21.7'
-
-    // GSON: Converter HTTP y parser de Json
-    implementation 'com.google.code.gson:gson:2.10'
-
-    // COMPOSE CON MATERIAL DESIGN
-    implementation 'androidx.compose.material:material:1.4.2'
-    implementation 'androidx.compose.material3:material3:1.0.1'
-    implementation 'androidx.compose.material:material-icons-core:1.4.2'
-    implementation 'androidx.compose.material:material-icons-extended:1.4.2'
-    implementation 'androidx.compose.material3:material3-window-size-class:1.0.1'
-
-    // COMPOSE CON NAVEGACION
-    implementation 'androidx.navigation:navigation-compose:2.5.3'
-
-    // COMPOSE EN VIEWMODEL
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
-
-    // COMPOSE PREVIEW
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-
-    // UTILIDADES PARA VIEWMODELS
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
-
-    // TESTING PARA COMPOSE
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.4.2'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest:1.4.2'
-
-    // TESTING
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'io.mockk:mockk:1.12.2'
-    testImplementation 'app.cash.turbine:turbine:0.12.3'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
-    // FIREBASE
-    implementation platform('com.google.firebase:firebase-bom:31.4.0')
-    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.2'
-    implementation 'com.google.firebase:firebase-config'
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-common-ktx'
-    implementation 'com.google.firebase:firebase-auth-ktx'
-
-    // SERVICIOS DE GOOGLE
-    implementation 'com.google.gms:google-services:4.3.15'
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.2'
-
-    // RETROFIT
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-
-    // OKHTTP
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
-    testImplementation('com.squareup.okhttp3:mockwebserver:4.10.0')
-
-    implementation 'com.github.bumptech.glide:glide:4.15.1'
-    implementation 'com.github.bumptech.glide:compose:1.0.0-alpha.1'
+    implementation project(path: ':core')
+    implementation project(path: ':content:movies')
 }

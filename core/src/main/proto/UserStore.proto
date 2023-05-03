@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_package = "com.jgt.core.storage.local.datastore";
+option java_multiple_files = true;
+
+message UserStore {
+  string stateClass = 1;
+  string id         = 2;
+  string email      = 3;
+  string name       = 4;
+}
