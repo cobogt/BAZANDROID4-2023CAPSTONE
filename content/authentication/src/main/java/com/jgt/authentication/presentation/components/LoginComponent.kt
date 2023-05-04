@@ -30,14 +30,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.jgt.content.movies.R
-import com.jgt.core.mvi.ActivityWithViewModelStoreInterface
-import com.jgt.core.mvi.navigationCatalog.NavigationCatalog
+import com.jgt.authentication.domain.AuthenticationViewModel
+import com.jgt.authentication.presentation.actions.LoginComponentActions
+import com.jgt.authentication.presentation.states.LoginState
+import com.jgt.content.authentication.R
+import com.jgt.core.gates.ExitGateAction
+import com.jgt.core.gates.GateResult
+import com.jgt.core.mvi.Action
 import com.jgt.core.sharedActions.NavigationActions
 import com.jgt.core.sharedActions.UserActions
-import com.jgt.content.movies.domain.AuthenticationViewModel
-import com.jgt.content.movies.presentation.actions.LoginComponentActions
-import com.jgt.content.movies.presentation.states.LoginState
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -59,16 +60,18 @@ fun LoginComponent() {
         viewModel.currenAction.collect {
             loginComponentState = loginComponentState.reduce( it )
 
-            if( it is com.jgt.core.sharedActions.UserActions.ResultUserActions.LoggedInAction ) {
+            Log.e("LoginComponent", "Action $it")
+
+            if( it is UserActions.ResultUserActions.LoggedInAction ) {
                 viewModel.dispatch(
-                    com.jgt.core.sharedActions.NavigationActions.NavigateToActivity(
-                        com.jgt.core.mvi.navigationCatalog.NavigationCatalog.MoviesActivityTarget().className
+                    ExitGateAction(
+                        GateResult.Success()
                     )
                 )
 
                 currentActivity.finish()
             }
-            Log.e("LoginComponent", "Action $it")
+
         }
     }
 
@@ -132,7 +135,7 @@ fun LoginComponent() {
             Spacer(modifier = Modifier.width(5.dp))
             Button(onClick = {
                 viewModel.dispatch(
-                    com.jgt.core.sharedActions.UserActions.LogInAction( email, password )
+                    UserActions.LogInAction( email, password )
                 )
             }, enabled = ! hasError && email.isNotEmpty() && password.isNotEmpty() ) {
                 Text(stringResource(id = R.string.login_component_button_login))
@@ -154,7 +157,7 @@ fun LoginComponent() {
                 .fillMaxWidth()
                 .clickable {
                     viewModel.dispatch(
-                        com.jgt.core.sharedActions.NavigationActions.NavigateToCompose("/signup")
+                        NavigationActions.NavigateToCompose("/signup")
                     )
                 }
         )

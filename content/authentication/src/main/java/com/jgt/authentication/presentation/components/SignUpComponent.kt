@@ -30,14 +30,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import com.jgt.content.movies.R
-import com.jgt.core.mvi.ActivityWithViewModelStoreInterface
-import com.jgt.core.mvi.navigationCatalog.NavigationCatalog
-import com.jgt.core.sharedActions.NavigationActions
-import com.jgt.core.sharedActions.UserActions
-import com.jgt.content.movies.domain.AuthenticationViewModel
-import com.jgt.content.movies.presentation.actions.SignUpComponentActions
-import com.jgt.content.movies.presentation.states.SignupState
+import com.jgt.authentication.domain.AuthenticationViewModel
+import com.jgt.authentication.presentation.actions.SignUpComponentActions
+import com.jgt.authentication.presentation.states.SignupState
+import com.jgt.content.authentication.R
+import com.jgt.core.gates.ExitGateAction
+import com.jgt.core.gates.GateResult
+
 /** * * * * * * * * *
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 10/04/23.
@@ -59,8 +58,8 @@ fun SignUpComponent() {
 
             if( it is com.jgt.core.sharedActions.UserActions.ResultUserActions.AccountCreatedAction ) {
                 viewModel.dispatch(
-                    com.jgt.core.sharedActions.NavigationActions.NavigateToActivity(
-                        com.jgt.core.mvi.navigationCatalog.NavigationCatalog.MoviesActivityTarget().className
+                    ExitGateAction(
+                        GateResult.Success()
                     )
                 )
 

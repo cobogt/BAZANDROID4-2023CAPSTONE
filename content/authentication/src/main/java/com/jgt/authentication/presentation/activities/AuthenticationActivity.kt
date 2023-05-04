@@ -1,4 +1,4 @@
-package com.jgt.content.movies.presentation.activities
+package com.jgt.authentication.presentation.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,18 +13,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.jgt.core.AppStateStore
-import com.jgt.core.mvi.Action
-import com.jgt.core.mvi.ActivityWithViewModelStoreInterface
-import com.jgt.core.mvi.navigationCatalog.NavigationCatalog
-import com.jgt.core.sharedActions.NavigationActions
-import com.jgt.core.sharedStates.UserState
-import com.jgt.content.movies.domain.AuthenticationViewModel
+import com.jgt.authentication.domain.AuthenticationViewModel
 import com.jgt.content.movies.presentation.components.authentication.LoginComponent
 import com.jgt.content.movies.presentation.components.authentication.SignUpComponent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
+import com.jgt.core.mvi.Action
+import com.jgt.core.sharedActions.NavigationActions
 import kotlinx.coroutines.launch
 
 /** * * * * * * * * *
@@ -37,6 +30,8 @@ class AuthenticationActivity:
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.e("LoginComponent", "onCreate")
 
         setContent {
             val navController = rememberNavController()
@@ -52,7 +47,7 @@ class AuthenticationActivity:
             LaunchedEffect( lifecycleScope ) {
                 coroutineScope.launch {
                     viewModelStateStore.currenAction.collect {
-                        if( it is com.jgt.core.sharedActions.NavigationActions.NavigateToCompose )
+                        if( it is NavigationActions.NavigateToCompose )
                             navController.navigate( it.composePath )
                     }
                 }
@@ -60,31 +55,14 @@ class AuthenticationActivity:
         }
 
         // Cargamos el estado inicial de la vista
-        viewModelStateStore
-            .dispatch( com.jgt.core.mvi.Action.LoadStateAction )
-
-        CoroutineScope( Dispatchers.IO ).launch {
-            com.jgt.core.AppStateStore.userState.first().also {
-                Log.e("AuthenticationActivity", "$it")
-
-                if( it is com.jgt.core.sharedStates.UserState.LoggedIn ) {
-                    viewModelStateStore.dispatch(
-                        com.jgt.core.sharedActions.NavigationActions.NavigateToActivity(
-                            com.jgt.core.mvi.navigationCatalog.NavigationCatalog.MoviesActivityTarget().className
-                        )
-                    )
-
-                    finish()
-                }
-            }
-        }
+        viewModelStateStore.dispatch( Action.LoadStateAction )
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.extras?.getString("navigateToCompose")?.also {
             viewModelStateStore.dispatch(
-                com.jgt.core.sharedActions.NavigationActions.NavigateToCompose( it )
+                NavigationActions.NavigateToCompose( it )
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.jgt.core.gates
 
+import android.util.Log
 import com.jgt.core.mvi.Action
 import com.jgt.core.mvi.Controller
 import com.jgt.core.mvi.Store
@@ -17,8 +18,11 @@ data class GatesController(
     fun evalGate(gate: Gate, originalAction: Action, store: Store? ): Action {
         var replaceAction = originalAction
 
-        if( gate.enterCondition( originalAction )) {
+        val enterInGate =  gate.enterCondition( originalAction )
+
+        if( enterInGate ) {
             replaceAction = gate.startAction
+            Log.e("GatesController", "$enterInGate: $gate === $originalAction -> $replaceAction")
 
             if( replaceAction != originalAction )
                 actionsStack.push(

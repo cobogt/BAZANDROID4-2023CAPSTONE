@@ -34,4 +34,7 @@ apply from: "$rootDir.path/gradlePresets/contentDependencies.gradle"
 dependencies {
     implementation project(path: ':core')
     implementation project(path: ':content:movies')
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation project(path: ':content:authentication')
 }

@@ -1,5 +1,6 @@
 package com.jgt.core
 
+import com.jgt.core.gates.GatesMiddleware
 import com.jgt.core.sharedStates.UserState
 import com.jgt.core.mvi.Action
 import com.jgt.core.mvi.Middleware
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * * * * * * * * * * **/
 object AppStateStore: Store {
     override val middlewareList: List<Middleware> = listOf(
+        GatesMiddleware( this ),
         NavigationMiddleware( this ),
     )
 

@@ -7,6 +7,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.WLBaz2023JGT" />
+        android:theme="@style/Theme.WLBaz2023JGT" >
+        <activity android:name="com.jgt.authentication.presentation.activities.AuthenticationActivity"
+            android:exported="false"/>
+    </application>
 
 </manifest>

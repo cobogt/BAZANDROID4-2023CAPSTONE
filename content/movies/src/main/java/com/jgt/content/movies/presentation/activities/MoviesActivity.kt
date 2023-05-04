@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
@@ -42,16 +43,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.jgt.content.movies.R
-import com.jgt.core.AppStateStore
-import com.jgt.core.mvi.ActivityWithViewModelStoreInterface
-import com.jgt.core.mvi.navigationCatalog.NavigationCatalog
-import com.jgt.core.sharedActions.NavigationActions
-import com.jgt.core.sharedActions.UserActions
 import com.jgt.core.sharedStates.UserState
 import com.jgt.content.movies.domain.MoviesViewModel
 import com.jgt.content.movies.presentation.components.movies.CheckConnectionComponent
 import com.jgt.content.movies.presentation.components.movies.MovieDetailComponent
 import com.jgt.content.movies.presentation.components.movies.MovieListComponent
+import com.jgt.core.mvi.ActivityWithViewModelStoreInterface
+import com.jgt.core.mvi.navigationCatalog.NavigationCatalog
+import com.jgt.core.sharedActions.NavigationActions
+import com.jgt.core.sharedActions.UserActions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -60,7 +60,7 @@ import kotlinx.coroutines.launch
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
 @AndroidEntryPoint
-class MoviesActivity: ComponentActivity(), com.jgt.core.mvi.ActivityWithViewModelStoreInterface {
+class MoviesActivity: ComponentActivity(), ActivityWithViewModelStoreInterface {
     override val viewModelStateStore by viewModels<MoviesViewModel>()
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -77,9 +77,9 @@ class MoviesActivity: ComponentActivity(), com.jgt.core.mvi.ActivityWithViewMode
                 "popular"   to Pair("Populares", Icons.Filled.StarRate),
             )
 
-            Scaffold(
+            Scaffold(Modifier.fillMaxHeight().fillMaxWidth(),
                 topBar = {
-                    if( currentUser is com.jgt.core.sharedStates.UserState.LoggedIn ) {
+                    if( currentUser is UserState.LoggedIn ) {
                         Row(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -100,12 +100,12 @@ class MoviesActivity: ComponentActivity(), com.jgt.core.mvi.ActivityWithViewMode
                             Button(
                                 onClick = {
                                 viewModelStateStore.dispatch(
-                                    com.jgt.core.sharedActions.UserActions.LogoutAction
+                                    UserActions.LogoutAction
                                 )
 
                                 viewModelStateStore.dispatch(
-                                    com.jgt.core.sharedActions.NavigationActions.NavigateToActivity(
-                                        com.jgt.core.mvi.navigationCatalog.NavigationCatalog.AuthActivityTarget().className
+                                    NavigationActions.NavigateToActivity(
+                                        NavigationCatalog.LauncherActivityTarget().className
                                     )
                                 )
 
@@ -132,7 +132,7 @@ class MoviesActivity: ComponentActivity(), com.jgt.core.mvi.ActivityWithViewMode
                                 onClick = {
                                     selectedItem = item.key
                                     viewModelStateStore.dispatch(
-                                        com.jgt.core.sharedActions.NavigationActions.NavigateToCompose(
+                                        NavigationActions.NavigateToCompose(
                                             "/list/${item.key}"
                                         )
                                     )
@@ -167,10 +167,10 @@ class MoviesActivity: ComponentActivity(), com.jgt.core.mvi.ActivityWithViewMode
                 LaunchedEffect( lifecycleScope ) {
                     coroutineScope.launch {
                         viewModelStateStore.currenAction.collect {
-                            if( it is com.jgt.core.sharedActions.NavigationActions.NavigateToCompose )
+                            if( it is NavigationActions.NavigateToCompose )
                                 navController.navigate( it.composePath )
 
-                            if( it is com.jgt.core.sharedActions.NavigationActions.Back && navController.backQueue.size > 2 )
+                            if( it is NavigationActions.Back && navController.backQueue.size > 2 )
                                 navController.popBackStack()
                         }
                     }
@@ -183,13 +183,13 @@ class MoviesActivity: ComponentActivity(), com.jgt.core.mvi.ActivityWithViewMode
         super.onNewIntent(intent)
         intent?.extras?.getString("navigateToCompose")?.also {
             viewModelStateStore.dispatch(
-                com.jgt.core.sharedActions.NavigationActions.NavigateToCompose( it )
+                NavigationActions.NavigateToCompose( it )
             )
         }
     }
 
     override fun onBackPressed() {
         //super.onBackPressed()
-        viewModelStateStore.dispatch( com.jgt.core.sharedActions.NavigationActions.Back )
+        viewModelStateStore.dispatch( NavigationActions.Back )
     }
 }

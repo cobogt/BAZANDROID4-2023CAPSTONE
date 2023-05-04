@@ -1,11 +1,6 @@
-package com.jgt.content.movies.domain
+package com.jgt.authentication.domain
 
 import androidx.lifecycle.ViewModel
-import com.jgt.core.AppStateStore
-import com.jgt.core.mvi.Action
-import com.jgt.core.mvi.Middleware
-import com.jgt.core.mvi.Store
-import com.jgt.core.sharedMiddlewares.FirebaseAuthMiddleware
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

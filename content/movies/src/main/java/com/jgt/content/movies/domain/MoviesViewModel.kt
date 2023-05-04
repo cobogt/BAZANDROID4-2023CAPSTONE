@@ -2,10 +2,7 @@ package com.jgt.content.movies.domain
 
 import androidx.lifecycle.ViewModel
 import com.jgt.core.AppStateStore
-import com.jgt.core.gates.GatesMiddleware
 import com.jgt.core.mvi.Action
-import com.jgt.core.mvi.Middleware
-import com.jgt.core.mvi.Store
 import com.jgt.core.sharedMiddlewares.FirebaseAuthMiddleware
 import com.jgt.content.movies.data.MoviesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +20,7 @@ class MoviesViewModel @Inject constructor(
     private val moviesRepository: MoviesRepository
 ): com.jgt.core.mvi.Store, ViewModel() {
     override val middlewareList: List<com.jgt.core.mvi.Middleware> = listOf(
-        com.jgt.core.sharedMiddlewares.FirebaseAuthMiddleware(this),
-        com.jgt.core.gates.GatesMiddleware(this)
+        FirebaseAuthMiddleware(this),
     )
 
     fun getMoviesByCategory( category: String ) =
@@ -33,16 +29,16 @@ class MoviesViewModel @Inject constructor(
     fun getMovieDetailById( movieId: Int ) =
         moviesRepository.getMovieDetailById( movieId )
 
-    private val currentActionMutable = MutableStateFlow<com.jgt.core.mvi.Action>(com.jgt.core.mvi.Action.LoadStateAction)
-    override val currenAction: StateFlow<com.jgt.core.mvi.Action> = currentActionMutable.asStateFlow()
+    private val currentActionMutable = MutableStateFlow<Action>(Action.LoadStateAction)
+    override val currenAction: StateFlow<Action> = currentActionMutable.asStateFlow()
 
     init {
         // Cargamos el estado inicial de la vista
-        dispatch( com.jgt.core.mvi.Action.LoadStateAction )
+        dispatch( Action.LoadStateAction )
     }
 
-    override fun dispatch(action: com.jgt.core.mvi.Action): com.jgt.core.mvi.Action {
-        var currentAction = com.jgt.core.AppStateStore.dispatch( action )
+    override fun dispatch(action: Action): Action {
+        var currentAction = AppStateStore.dispatch( action )
 
         middlewareList.forEach { currentAction = it.next( currentAction ) }
 

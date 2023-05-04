@@ -1,9 +1,6 @@
-package com.jgt.content.movies.presentation.states
+package com.jgt.authentication.presentation.states
 
-import com.jgt.core.mvi.Action
-import com.jgt.core.mvi.ProductionRule
-import com.jgt.core.mvi.State
-import com.jgt.content.movies.presentation.actions.SignUpComponentActions
+import com.jgt.authentication.presentation.actions.SignUpComponentActions
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -17,13 +14,13 @@ sealed class SignupState: com.jgt.core.mvi.State() {
     ): SignupState() {
         override val productionRules: List<com.jgt.core.mvi.ProductionRule> = sharedProductionRules }
 
-    data class SignupError( val signupData: SignupData, val errorMessage: String ): SignupState() {
+    data class SignupError(val signupData: SignupData, val errorMessage: String ): SignupState() {
         override val productionRules: List<com.jgt.core.mvi.ProductionRule> = sharedProductionRules }
 
     protected val sharedProductionRules = listOf<com.jgt.core.mvi.ProductionRule> { state, action ->
         if( state is SignupState && action is SignUpComponentActions)
             when( state ) {
-                is SignupState.SignupData -> when( action ) {
+                is SignupData -> when( action ) {
                     is SignUpComponentActions.SetEmailAction -> {
                         val emailValidated = validateEmail( action.newEmail )
                         val signupData = state.copy(email = action.newEmail)

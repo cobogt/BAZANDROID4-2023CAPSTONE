@@ -1,9 +1,6 @@
-package com.jgt.content.movies.presentation.states
+package com.jgt.authentication.presentation.states
 
-import com.jgt.core.mvi.Action
-import com.jgt.core.mvi.ProductionRule
-import com.jgt.core.mvi.State
-import com.jgt.content.movies.presentation.actions.LoginComponentActions
+import com.jgt.authentication.presentation.actions.LoginComponentActions
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -13,13 +10,13 @@ sealed class LoginState: com.jgt.core.mvi.State() {
     data class LoginData( val email: String = "", val password: String = ""): LoginState() {
         override val productionRules: List<com.jgt.core.mvi.ProductionRule> = sharedProductionRules }
 
-    data class LoginError( val loginData: LoginData, val errorMessage: String ): LoginState() {
+    data class LoginError(val loginData: LoginData, val errorMessage: String ): LoginState() {
         override val productionRules: List<com.jgt.core.mvi.ProductionRule> = sharedProductionRules }
 
     protected val sharedProductionRules = listOf<com.jgt.core.mvi.ProductionRule> { state, action ->
-        if( state is LoginState && action is LoginComponentActions )
+        if( state is LoginState && action is LoginComponentActions)
             when( state ) {
-                is LoginData  -> when( action ) {
+                is LoginData -> when( action ) {
                     is LoginComponentActions.SetEmailAction -> {
                         val emailValidated = validateEmail( action.newEmail )
 
@@ -79,7 +76,7 @@ sealed class LoginState: com.jgt.core.mvi.State() {
                     val errorMessage = "${action.text} ${action.exception?.message}"
 
                     when( state ) {
-                        is LoginData  -> LoginError(state, errorMessage )
+                        is LoginData -> LoginError(state, errorMessage )
                         is LoginError -> LoginError(state.loginData, errorMessage )
                     }
                 } else

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Authentication</string>
+    <string name="login_component_button_login">Iniciar sesión</string>
+    <string name="login_component_label_signup">Registrarse como nuevo usuario</string>
+    <string name="login_component_label_header">Iniciar sesión</string>
+    <string name="signup_component_label_header">Nuevo usuario</string>
+    <string name="signup_component_button_signup">Registrarse</string>
+    <string name="signup_component_label_login">Iniciar sesión</string>
 </resources>

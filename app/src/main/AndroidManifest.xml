@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name="com.jgt.wizelinebaz2023.WApplication"
+        android:name=".WApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -11,10 +11,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.WLBaz2023JGT"
-        tools:targetApi="31" >
-        <activity android:name="com.jgt.content.movies.presentation.activities.AuthenticationActivity"
-            android:exported="true">
+        tools:targetApi="31">
 
+        <activity
+            android:name=".LauncherActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

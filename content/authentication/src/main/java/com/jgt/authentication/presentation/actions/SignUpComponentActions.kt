@@ -1,6 +1,4 @@
-package com.jgt.content.movies.presentation.actions
-
-import com.jgt.core.mvi.Action
+package com.jgt.authentication.presentation.actions
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT

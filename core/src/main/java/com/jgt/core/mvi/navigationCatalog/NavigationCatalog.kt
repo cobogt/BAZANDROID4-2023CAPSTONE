@@ -9,7 +9,7 @@ sealed interface NavigationCatalog {
         override val params: Map<String, String> = mapOf()
     ): NavigationActivityInterface {
         override val className: String =
-            "com.jgt.content.movies.presentation.activities.AuthenticationActivity"
+            "com.jgt.authentication.presentation.activities.AuthenticationActivity"
     }
 
     data class MoviesActivityTarget(
@@ -17,5 +17,12 @@ sealed interface NavigationCatalog {
     ): NavigationActivityInterface {
         override val className: String =
             "com.jgt.content.movies.presentation.activities.MoviesActivity"
+    }
+
+    data class LauncherActivityTarget(
+        override val params: Map<String, String> = mapOf()
+    ): NavigationActivityInterface {
+        override val className: String =
+            "com.jgt.wizelinebaz2023.LauncherActivity"
     }
 }
