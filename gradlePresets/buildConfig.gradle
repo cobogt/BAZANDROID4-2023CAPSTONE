@@ -69,3 +69,5 @@ detekt {
 kapt {
     correctErrorTypes true
 }
+
+apply from: "$rootDir.path/gradlePresets/jacoco.gradle"

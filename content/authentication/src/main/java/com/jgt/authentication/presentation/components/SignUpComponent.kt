@@ -1,4 +1,4 @@
-package com.jgt.content.movies.presentation.components.authentication
+package com.jgt.authentication.presentation.components
 
 import android.app.Activity
 import android.util.Log

@@ -5,6 +5,7 @@ plugins {
     id 'io.gitlab.arturbosch.detekt'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
+    id 'jacoco'
 }
 
 apply from: "$rootDir.path/gradlePresets/buildConfig.gradle"

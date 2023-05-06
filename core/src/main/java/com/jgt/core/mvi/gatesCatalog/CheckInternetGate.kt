@@ -14,6 +14,7 @@ import java.net.InetAddress
  * Created by Jacobo G Tamayo on 25/04/23.
  * * * * * * * * * * **/
 object CheckInternetGate: Gate() {
+    var dispatcher = Dispatchers.IO
     override val onErrorAction: Action = NavigationActions.Back
 
     override val startAction: Action =
@@ -21,9 +22,10 @@ object CheckInternetGate: Gate() {
 
     override fun enterCondition(action: Action): Boolean =
         try {
+            val pingTimeout = 250
             runBlocking {
-                withContext( Dispatchers.IO ) {
-                    ! InetAddress.getByName("8.8.8.8").isReachable(250)
+                withContext( dispatcher ) {
+                    ! InetAddress.getByName("8.8.8.8").isReachable(pingTimeout)
                 }
             }
         } catch (e: Exception ) {

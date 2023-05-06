@@ -4,14 +4,67 @@ plugins {
     id 'io.gitlab.arturbosch.detekt'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
+    id 'jacoco'
 }
 
 apply from: "$rootDir.path/gradlePresets/buildConfig.gradle"
+
+task jacocoTestReport(type: JacocoReport,
+        dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+    reports {
+        html {
+            enabled true
+        }
+        xml {
+            enabled true
+        }
+    }
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            'android/**/*.*'
+    ]
+
+    def mainSrc = "${project.projectDir}/src/main/java"
+    def debugTree= fileTree(dir: "${buildDir}/intermediates/classes/debug",
+            excludes: fileFilter)
+
+    sourceDirectories.setFrom(files([mainSrc]))
+    classDirectories.setFrom(files([debugTree]))
+    executionData.setFrom(fileTree(dir: "$buildDir", includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code-coverage/connected/*coverage.ec"
+    ]))
+}
 
 android {
     namespace 'com.jgt.wizelinebaz2023'
 
     compileSdk 33
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+        unitTests.returnDefaultValues = true
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+    }
 
     defaultConfig {
         minSdk 29
@@ -34,7 +87,5 @@ apply from: "$rootDir.path/gradlePresets/contentDependencies.gradle"
 dependencies {
     implementation project(path: ':core')
     implementation project(path: ':content:movies')
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.5.0'
     implementation project(path: ':content:authentication')
 }

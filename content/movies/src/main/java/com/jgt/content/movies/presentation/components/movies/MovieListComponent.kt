@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.jgt.core.mvi.ActivityWithViewModelStoreInterface
-import com.jgt.core.mvi.gatesCatalog.CheckInternetGate
 import com.jgt.core.sharedActions.NavigationActions
 import com.jgt.content.movies.domain.MoviesViewModel
 import com.jgt.content.movies.domain.models.MovieList
@@ -55,7 +54,7 @@ import kotlinx.coroutines.launch
 fun MovieListComponent( category: String ) {
     // Enlace desde estado del Store y hacia Dispatcher
     val currentActivity = LocalContext.current as Activity
-    val viewModel: MoviesViewModel = (currentActivity as com.jgt.core.mvi.ActivityWithViewModelStoreInterface)
+    val viewModel: MoviesViewModel = (currentActivity as ActivityWithViewModelStoreInterface)
         .viewModelStateStore as MoviesViewModel
 
     val haptic = LocalHapticFeedback.current
@@ -158,7 +157,7 @@ fun MovieListComponent( category: String ) {
                                 Modifier.clickable {
                                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                     viewModel.dispatch(
-                                        com.jgt.core.sharedActions.NavigationActions.NavigateToCompose(
+                                        NavigationActions.NavigateToCompose(
                                             "/movies/detail/${movie.id}"
                                         )
                                     )

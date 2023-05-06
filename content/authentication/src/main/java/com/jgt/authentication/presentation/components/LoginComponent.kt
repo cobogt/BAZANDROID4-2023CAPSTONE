@@ -1,4 +1,4 @@
-package com.jgt.content.movies.presentation.components.authentication
+package com.jgt.authentication.presentation.components
 
 import android.app.Activity
 import android.util.Log
@@ -36,7 +36,6 @@ import com.jgt.authentication.presentation.states.LoginState
 import com.jgt.content.authentication.R
 import com.jgt.core.gates.ExitGateAction
 import com.jgt.core.gates.GateResult
-import com.jgt.core.mvi.Action
 import com.jgt.core.sharedActions.NavigationActions
 import com.jgt.core.sharedActions.UserActions
 

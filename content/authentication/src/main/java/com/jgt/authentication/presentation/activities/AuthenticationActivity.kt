@@ -14,8 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jgt.authentication.domain.AuthenticationViewModel
-import com.jgt.content.movies.presentation.components.authentication.LoginComponent
-import com.jgt.content.movies.presentation.components.authentication.SignUpComponent
+import com.jgt.authentication.presentation.components.LoginComponent
+import com.jgt.authentication.presentation.components.SignUpComponent
 import com.jgt.core.mvi.Action
 import com.jgt.core.sharedActions.NavigationActions
 import kotlinx.coroutines.launch
