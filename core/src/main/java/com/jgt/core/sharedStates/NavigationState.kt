@@ -10,12 +10,16 @@ import com.jgt.core.sharedActions.NavigationActions
  * * * * * * * * * * **/
 sealed class NavigationState: State() {
     data class NavigateCompose( val path: String ): NavigationState() {
-        override val productionRules: List<ProductionRule> = listOf {
+        override val productionRules: List<ProductionRule> = sharedProductionrules }
+
+    object Loading: NavigationState() {
+        override val productionRules: List<ProductionRule> = sharedProductionrules }
+
+    internal val sharedProductionrules: List<ProductionRule> = listOf {
             state, action ->
-                if( action is NavigationActions.NavigateToCompose )
-                    NavigateCompose( action.composePath )
-                else
-                    state
-        }
+        if( action is NavigationActions.NavigateToCompose )
+            NavigateCompose( action.composePath )
+        else
+            state
     }
 }
