@@ -1,19 +1,22 @@
 package com.jgt.authentication.presentation.states
 
 import com.jgt.authentication.presentation.actions.LoginComponentActions
+import com.jgt.core.mvi.Action
+import com.jgt.core.mvi.ProductionRule
+import com.jgt.core.mvi.State
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
-sealed class LoginState: com.jgt.core.mvi.State() {
+sealed class LoginState: State() {
     data class LoginData( val email: String = "", val password: String = ""): LoginState() {
-        override val productionRules: List<com.jgt.core.mvi.ProductionRule> = sharedProductionRules }
+        override val productionRules: List<ProductionRule> = sharedProductionRules }
 
     data class LoginError(val loginData: LoginData, val errorMessage: String ): LoginState() {
-        override val productionRules: List<com.jgt.core.mvi.ProductionRule> = sharedProductionRules }
+        override val productionRules: List<ProductionRule> = sharedProductionRules }
 
-    protected val sharedProductionRules = listOf<com.jgt.core.mvi.ProductionRule> { state, action ->
+    protected val sharedProductionRules = listOf<ProductionRule> { state, action ->
         if( state is LoginState && action is LoginComponentActions)
             when( state ) {
                 is LoginData -> when( action ) {
@@ -72,7 +75,7 @@ sealed class LoginState: com.jgt.core.mvi.State() {
                     }
                 }
             } else
-                if( state is LoginState && action is com.jgt.core.mvi.Action.ErrorAction ) {
+                if( state is LoginState && action is Action.ErrorAction ) {
                     val errorMessage = "${action.text} ${action.exception?.message}"
 
                     when( state ) {

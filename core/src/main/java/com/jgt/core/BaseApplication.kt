@@ -2,6 +2,7 @@ package com.jgt.core
 
 import android.app.Application
 import android.content.Context
+import com.jgt.core.sharedControllers.NavigationController
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -16,6 +17,6 @@ abstract class BaseApplication: Application() {
         super.onCreate()
 
         appContext = applicationContext
-        registerActivityLifecycleCallbacks(com.jgt.core.sharedControllers.NavigationController)
+        registerActivityLifecycleCallbacks( NavigationController )
     }
 }

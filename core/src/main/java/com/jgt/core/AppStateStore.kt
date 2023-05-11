@@ -26,7 +26,7 @@ object AppStateStore: Store {
     private val userStateMutable = MutableStateFlow<UserState>( UserState.Loading )
     val userState: StateFlow<UserState> = userStateMutable
 
-    override fun dispatch( action: Action): Action {
+    override fun dispatch( action: Action ): Action {
         var currentAction = action
 
         middlewareList.forEach {

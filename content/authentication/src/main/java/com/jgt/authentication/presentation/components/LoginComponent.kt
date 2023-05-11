@@ -36,6 +36,7 @@ import com.jgt.authentication.presentation.states.LoginState
 import com.jgt.content.authentication.R
 import com.jgt.core.gates.ExitGateAction
 import com.jgt.core.gates.GateResult
+import com.jgt.core.mvi.ActivityWithViewModelStoreInterface
 import com.jgt.core.sharedActions.NavigationActions
 import com.jgt.core.sharedActions.UserActions
 
@@ -48,7 +49,7 @@ import com.jgt.core.sharedActions.UserActions
 fun LoginComponent() {
     // Enlace desde estado del Store y hacia Dispatcher
     val currentActivity = LocalContext.current as Activity
-    val viewModel: AuthenticationViewModel = (currentActivity as com.jgt.core.mvi.ActivityWithViewModelStoreInterface)
+    val viewModel: AuthenticationViewModel = (currentActivity as ActivityWithViewModelStoreInterface)
         .viewModelStateStore as AuthenticationViewModel
 
     var loginComponentState by remember {

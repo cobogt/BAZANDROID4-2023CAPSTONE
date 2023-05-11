@@ -58,6 +58,10 @@ android {
     composeOptions { kotlinCompilerExtensionVersion = "1.4.3" }
 
     hilt { enableAggregatingTask = true }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 detekt {

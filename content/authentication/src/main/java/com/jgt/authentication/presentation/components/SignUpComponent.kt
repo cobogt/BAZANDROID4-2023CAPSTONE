@@ -36,6 +36,9 @@ import com.jgt.authentication.presentation.states.SignupState
 import com.jgt.content.authentication.R
 import com.jgt.core.gates.ExitGateAction
 import com.jgt.core.gates.GateResult
+import com.jgt.core.mvi.ActivityWithViewModelStoreInterface
+import com.jgt.core.sharedActions.NavigationActions
+import com.jgt.core.sharedActions.UserActions
 
 /** * * * * * * * * *
  * Project WLBaz2023JGT
@@ -45,7 +48,7 @@ import com.jgt.core.gates.GateResult
 @Composable
 fun SignUpComponent() {
     val currentActivity = LocalContext.current as Activity
-    val viewModel: AuthenticationViewModel = (currentActivity as com.jgt.core.mvi.ActivityWithViewModelStoreInterface)
+    val viewModel: AuthenticationViewModel = (currentActivity as ActivityWithViewModelStoreInterface)
         .viewModelStateStore as AuthenticationViewModel
 
     var signUpComponentState by remember {
@@ -56,7 +59,7 @@ fun SignUpComponent() {
         viewModel.currenAction.collect {
             signUpComponentState = signUpComponentState.reduce( it )
 
-            if( it is com.jgt.core.sharedActions.UserActions.ResultUserActions.AccountCreatedAction ) {
+            if( it is UserActions.ResultUserActions.AccountCreatedAction ) {
                 viewModel.dispatch(
                     ExitGateAction(
                         GateResult.Success()
@@ -65,8 +68,6 @@ fun SignUpComponent() {
 
                 currentActivity.finish()
             }
-
-            Log.e("SignUpComponent", "Action $it")
         }
     }
 
@@ -94,7 +95,7 @@ fun SignUpComponent() {
             email          = currentState.signupData.email
             password       = currentState.signupData.password
             passwordRepeat = currentState.signupData.passwordRepeat
-            errorMessage  = currentState.errorMessage
+            errorMessage   = currentState.errorMessage
         }
     }
 
@@ -141,7 +142,7 @@ fun SignUpComponent() {
             Spacer(modifier = Modifier.width(5.dp))
             Button(onClick = {
                 viewModel.dispatch(
-                    com.jgt.core.sharedActions.UserActions.CreateAccountAction( email, password )
+                    UserActions.CreateAccountAction( email, password )
                 )
             }, enabled = ! hasError &&
                     email.isNotEmpty() &&
@@ -166,7 +167,7 @@ fun SignUpComponent() {
                 .fillMaxWidth()
                 .clickable {
                     viewModel.dispatch(
-                        com.jgt.core.sharedActions.NavigationActions.NavigateToCompose("/login")
+                        NavigationActions.NavigateToCompose("/login")
                     )
                 }
         )

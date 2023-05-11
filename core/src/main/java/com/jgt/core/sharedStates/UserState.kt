@@ -13,19 +13,19 @@ import com.jgt.core.sharedStates.caretakers.UserStateCaretaker
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
 sealed class UserState: State() {
-    protected val sharedCaretaker: UserStateCaretaker = UserStateCaretaker()
+    protected var sharedCaretaker: UserStateCaretaker = UserStateCaretaker()
     // (S)LoggedOut -> (A)LoginAction -> (A)ResultUserActions.LoggedInAction -> (S)LogeddIn
     object Loading: UserState() {
-        override val caretaker: Caretaker = sharedCaretaker
+        override var caretaker: Caretaker? = sharedCaretaker
         override val productionRules = sharedProductionRules }
     object LoggedOut: UserState() {
-        override val caretaker: Caretaker = sharedCaretaker
+        override var caretaker: Caretaker? = sharedCaretaker
         override val productionRules = sharedProductionRules }
     data class LoggedIn( val user: User): UserState() {
-        override val caretaker: Caretaker = sharedCaretaker
+        override var caretaker: Caretaker? = sharedCaretaker
         override val productionRules = sharedProductionRules }
 
-    override val caretaker: Caretaker = sharedCaretaker
+    override var caretaker: Caretaker? = sharedCaretaker
 
     protected val sharedProductionRules = listOf<ProductionRule> { state, action ->
         if( action is UserActions.ResultUserActions && state is UserState)

@@ -1,6 +1,5 @@
 package com.jgt.authentication.gates
 
-import android.util.Log
 import com.jgt.core.AppStateStore
 import com.jgt.core.gates.Gate
 import com.jgt.core.mvi.Action

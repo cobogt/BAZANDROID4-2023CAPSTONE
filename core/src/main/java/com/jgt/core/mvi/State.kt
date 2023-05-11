@@ -8,7 +8,7 @@ import okhttp3.internal.toImmutableList
  * * * * * * * * * * **/
 abstract class State {
     open val productionRules = listOf<ProductionRule>()
-    open val caretaker: Caretaker? = null
+    open var caretaker: Caretaker? = null
 
     inline fun <reified T: State>reduce(action: Action): T =
         productionRules
@@ -16,10 +16,10 @@ abstract class State {
                 caretaker?.let { ct ->
                     it.toMutableList().apply {
                         add { state, action ->
-                            if( action is Action.LoadStateAction)
+                            if( action is Action.LoadStateAction )
                                 ct.loadState() ?: ct.defaultState
                             else
-                                state.also { ct.saveState( state ) }
+                                state
                         }
                     }.toImmutableList()
                 } ?: it
@@ -27,5 +27,8 @@ abstract class State {
         .map {
             it.invoke( this, action )
         }.firstOrNull { it != this }
-        ?.let { it as T } ?: this as T
+        ?.let { it as T }
+        ?.also {
+            caretaker?.saveState( it )
+        }?: this as T
 }

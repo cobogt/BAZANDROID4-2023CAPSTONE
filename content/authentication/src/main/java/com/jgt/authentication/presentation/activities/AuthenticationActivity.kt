@@ -17,6 +17,7 @@ import com.jgt.authentication.domain.AuthenticationViewModel
 import com.jgt.authentication.presentation.components.LoginComponent
 import com.jgt.authentication.presentation.components.SignUpComponent
 import com.jgt.core.mvi.Action
+import com.jgt.core.mvi.ActivityWithViewModelStoreInterface
 import com.jgt.core.sharedActions.NavigationActions
 import kotlinx.coroutines.launch
 
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
  * Created by Jacobo G Tamayo on 10/04/23.
  * * * * * * * * * * **/
 class AuthenticationActivity:
-    ComponentActivity(), com.jgt.core.mvi.ActivityWithViewModelStoreInterface {
+    ComponentActivity(), ActivityWithViewModelStoreInterface {
     override val viewModelStateStore: AuthenticationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
